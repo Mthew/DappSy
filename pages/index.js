@@ -1,11 +1,10 @@
 import Layout from "../components/Layout/Layout";
 import Sidebar from "../components/Layout/Sidebar";
-import ConnectWalletButton from "../components/Wallet/WalletConnect";
 
 export default function Index() {
   return (
     <section>
-      <ConnectWalletButton />
+      <h1>Hola</h1>
     </section>
   );
 }
