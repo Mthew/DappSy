@@ -1,0 +1,28 @@
+{
+  "name": "dappsy",
+  "version": "1.0.0",
+  "keywords": [
+    "ethereum",
+    "react",
+    "uniswap",
+    "workspaces",
+    "yarn"
+  ],
+  "description": "dappsy source code",
+  "main": "index.js",
+  "repository": "https://github.com/Mthew/DappSy.git",
+  "author": "Mthew",
+  "license": "MIT",  
+  "scripts": {
+    "next:install": "cd packages/frontend && yarn run install",
+    "next:dev": "cd packages/frontend && yarn run dev",
+    "next:build": "cd packages/frontend && yarn run build",
+    "next:start": "cd packages/frontend && yarn run start",
+    "next:lint": "cd packages/frontend && yarn run lint",
+    "sc:install": "cd packages/hardhat && yarn install",
+    "sc:compile": "cd packages/hardhat && npx hardhat compile",
+    "sc:test": "cd packages/hardhat && npx hardhat test",
+    "sc:node": "cd packages/hardhat && npx hardhat node",
+    "sc:deploy": "cd packages/hardhat && npx hardhat run scripts/deploy.js"
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "name": "dappsy",
+  "name": "@dappsy/frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {

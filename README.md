@@ -9,28 +9,26 @@ dependencies:
 
 ```sh
 git clone https://github.com/Mthew/DappSy.git
-cd packages/hardhat
-npm install
+cd dappsy
+yarn run sc:install
 ```
 
 Once installed, let's run Hardhat's testing network:
 
 ```sh
-npx hardhat node
+yarn run sc:node
 ```
 
 Then, on a new terminal, go to the harhat root folder and run this to
 deploy your contract:
 
 ```sh
-npx hardhat run scripts/deploy.js --network localhost
+yarn run sc:deploy
 ```
 
 Finally, we can run the frontend with:
 
 ```sh
-cd ..
-cd frontend
-npm install
-npm run dev
+yarn run next:install
+yarn run next:dev
 ```

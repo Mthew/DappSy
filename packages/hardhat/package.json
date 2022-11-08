@@ -1,9 +1,9 @@
 {
-  "name": "dappsy",
+  "name": "@dappsy/hardhat",
   "version": "1.0.0",
   "description": "web3 backend for dappdy dapp",
   "main": "index.js",
-  "author": "M_thew",
+  "author": "Mthew",
   "license": "MIT",
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",
