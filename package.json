@@ -14,7 +14,7 @@
   "author": "Mthew",
   "license": "MIT",  
   "scripts": {
-    "next:install": "cd packages/frontend && yarn run install",
+    "next:install": "cd packages/frontend && yarn",
     "next:dev": "cd packages/frontend && yarn run dev",
     "next:build": "cd packages/frontend && yarn run build",
     "next:start": "cd packages/frontend && yarn run start",
