@@ -4,8 +4,9 @@
   "keywords": [
     "ethereum",
     "react",
-    "uniswap",
-    "workspaces",
+    "solidity",
+    "hardhat",
+    "next",
     "yarn"
   ],
   "description": "dappsy source code",
@@ -14,7 +15,7 @@
   "author": "Mthew",
   "license": "MIT",  
   "scripts": {
-    "next:install": "cd packages/frontend && yarn",
+    "next:install": "cd packages/frontend && yarn install",
     "next:dev": "cd packages/frontend && yarn run dev",
     "next:build": "cd packages/frontend && yarn run build",
     "next:start": "cd packages/frontend && yarn run start",
