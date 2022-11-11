@@ -24,3 +24,15 @@ body {
   );
   z-index: -2;
 }
+
+.dappsy-button-primary {
+  border: #0f1b31;
+  background-color: #172b4d;
+  color: #adb5bd;
+}
+
+.dappsy-button-primary:hover {
+  border: #0f1b31;
+  background: linear-gradient(269.26deg, #172b4d 2%, #4a5dc6 98%);
+  color: #adb5bd;
+}

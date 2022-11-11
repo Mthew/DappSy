@@ -1,42 +1,76 @@
-import Image from "next/image";
-import styles from "./Header.module.css";
-
+import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
+import { useDisconnect } from "wagmi";
+import styles from "./header.module.css";
 //NAVIGATION
 import { navigation } from "../../utils/navigationLinks";
-import Link from "next/link";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-const Header = () => {
-  return (
-    <header className={styles.header}>
-      <nav className={styles.navbar}>
-        <ul className="d-flex align-items">
-          {navigation.map((item, key) => (
-            <Link href={`${item.route}`} key={key}>
-              <span className={`text-bold ${styles.navbar_items}`}>
-                {item.name}
-              </span>
-            </Link>
-          ))}
 
-          {/* <li className="text-1xl d-flex justify-center align-items">
-            0x14DFbA...
+const Header = () => {
+  const { data: session, status } = useSession();
+  const loading = status === "loading";
+  const { disconnect } = useDisconnect();
+
+  return (
+    <header>
+      <noscript>
+        <style>{`.nojs-show { opacity: 1; top: 0; }`}</style>
+      </noscript>
+      <div className={styles.signedInStatus}>
+        <p
+          className={`nojs-show ${
+            !session && loading ? styles.loading : styles.loaded
+          }`}
+        >
+          {!session && (
+            <>
+              <span className={styles.notSignedInText}>
+                You are not signed in
+              </span>
+            </>
+          )}
+          {session?.user && (
+            <>
+              {session.user.image && (
+                <span
+                  style={{ backgroundImage: `url('${session.user.image}')` }}
+                  className={styles.avatar}
+                />
+              )}
+              <span className={styles.signedInText}>
+                <small>Signed in as</small>
+                <br />
+                <strong>{session.user.email ?? session.user.name}</strong>
+              </span>
+              <a
+                href={`/api/auth/signout`}
+                className={styles.button}
+                onClick={(e) => {
+                  e.preventDefault();
+                  disconnect();
+                  signOut();
+                }}
+              >
+                Sign out
+              </a>
+            </>
+          )}
+        </p>
+      </div>
+      <nav>
+        <ul className={styles.navItems}>
+          {/* {navigation.map((item, key) => (
+          <Link href={`${item.route}`} key={key}>
+            <span className={`text-bold ${styles.navbar_items}`}>
+              {item.name}
+            </span>
+          </Link>
+        ))} */}
+          <li className={styles.navItem}>
+            <Link href="/">Home</Link>
           </li>
-          <li>
-            <figure className={styles.profile}>
-              <Image
-                alt="profile"
-                width={100}
-                height={100}
-                objectFit="cover"
-                layout="responsive"
-                src={
-                  "https://cdn.pixabay.com/photo/2020/05/17/20/21/cat-5183427__340.jpg"
-                }
-              />
-            </figure>
-          </li> */}
-          <li>
-            <ConnectButton />
+          <li className={styles.navItem}>
+            <Link href="/siwe">SIWE</Link>
           </li>
         </ul>
       </nav>
