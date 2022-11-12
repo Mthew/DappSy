@@ -24,14 +24,11 @@ export default async function auth(req, res) {
       },
       async authorize(credentials) {
         try {
-          console.log("ESTADO 111", credentials);
           const siwe = new SiweMessage(
             JSON.parse(credentials?.message || "{}")
           );
-          console.log("ESTADO 222", siwe);
 
           const nextAuthUrl = new URL(process.env.NEXTAUTH_URL);
-          console.log("ESTADO 333", nextAuthUrl);
 
           // const result = await siwe.validate({
           //   signature: credentials?.signature || "",
@@ -40,8 +37,7 @@ export default async function auth(req, res) {
           // });
           const nonce = await getCsrfToken({ req });
           const result = await siwe.validate(credentials?.signature || "");
-
-          console.log("PASOPOR AQUI", result, nonce);
+          
           if (nonce === result?.nonce) {
             return await new User().validate(siwe.address);
             // return {
