@@ -13,7 +13,9 @@ export default function Layout({ children }) {
         <Sidebar />
         <main className="d-flex justify-content align-items">
           <Header></Header>
-          <div className="bg-slate-200 min-h-[80%] max-w-screen-sm max-w-screen-md max-w-screen-lg max-w-screen-xl max-w-screen-xl main-content box-content px-10 py-5">{children}</div>
+          <div className="bg-slate-200 min-h-[80%] max-w-screen-sm max-w-screen-md max-w-screen-lg max-w-screen-xl max-w-screen-xl main-content box-content px-10 py-5">            
+            {children}
+          </div>
         </main>
       </section>
     </>

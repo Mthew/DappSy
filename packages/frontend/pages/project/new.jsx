@@ -12,7 +12,6 @@ import {
 } from "antd";
 import React, { useState } from "react";
 
-import Layout from "../../components/Layout";
 import axios from "axios";
 
 import { useSignMessage } from "wagmi";
@@ -88,7 +87,6 @@ let item = {};
 
 export default () => {
   const [form] = Form.useForm();
-  
 
   const signData = (values) => {
     // const formData = new FormData(JSON.stringify(values));
@@ -156,122 +154,120 @@ export default () => {
     value: website,
   }));
   return (
-    <Layout>
-      <div className="bg-white">
-        <div className="mx-auto grid max-w-2xl grid-cols-1 items-center gap-y-16 gap-x-8 py-24 px-4 sm:px-6 sm:py-32 lg:max-w-7xl lg:grid-cols-2 lg:px-8">
-          <Form
-            {...formItemLayout}
-            form={form}
-            name="register"
-            onFinish={onFinish}
-            initialValues={{
-              residence: ["zhejiang", "hangzhou", "xihu"],
-              prefix: "86",
-            }}
-            scrollToFirstError
+    <div className="bg-white">
+      <div className="mx-auto grid max-w-2xl grid-cols-1 items-center gap-y-16 gap-x-8 py-24 px-4 sm:px-6 sm:py-32 lg:max-w-7xl lg:grid-cols-2 lg:px-8">
+        <Form
+          {...formItemLayout}
+          form={form}
+          name="register"
+          onFinish={onFinish}
+          initialValues={{
+            residence: ["zhejiang", "hangzhou", "xihu"],
+            prefix: "86",
+          }}
+          scrollToFirstError
+        >
+          <Form.Item
+            name="name"
+            label="Nombre"
+            rules={[
+              {
+                required: true,
+                message: "El campo nombre de proyecto es obligatorio",
+              },
+            ]}
           >
-            <Form.Item
-              name="name"
-              label="Nombre"
-              rules={[
-                {
-                  required: true,
-                  message: "El campo nombre de proyecto es obligatorio",
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
+            <Input />
+          </Form.Item>
 
-            <Form.Item
-              name="desription"
-              label="Description"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input Intro",
-                },
-              ]}
-            >
-              <Input.TextArea showCount maxLength={255} />
-            </Form.Item>
+          <Form.Item
+            name="desription"
+            label="Description"
+            rules={[
+              {
+                required: true,
+                message: "Please input Intro",
+              },
+            ]}
+          >
+            <Input.TextArea showCount maxLength={255} />
+          </Form.Item>
 
-            <Form.Item
-              name="price"
-              label="Costo/Precio"
-              rules={[
-                {
-                  required: true,
-                  message: "El campo nombre de proyecto es obligatorio",
-                },
-              ]}
-            >
-              <InputNumber />
-            </Form.Item>
+          <Form.Item
+            name="price"
+            label="Costo/Precio"
+            rules={[
+              {
+                required: true,
+                message: "El campo nombre de proyecto es obligatorio",
+              },
+            ]}
+          >
+            <InputNumber />
+          </Form.Item>
 
-            <Form.Item
-              name="tokenCount"
-              label="Cantidad de tokens"
-              rules={[
-                {
-                  required: true,
-                  message: "El campo nombre de proyecto es obligatorio",
-                },
-              ]}
-            >
-              <InputNumber />
-            </Form.Item>
+          <Form.Item
+            name="tokenCount"
+            label="Cantidad de tokens"
+            rules={[
+              {
+                required: true,
+                message: "El campo nombre de proyecto es obligatorio",
+              },
+            ]}
+          >
+            <InputNumber />
+          </Form.Item>
 
-            <Form.Item
-              label="Captcha"
-              extra="We must make sure that your are a human."
-            >
-              <Row gutter={8}>
-                <Col span={12}>
-                  <Form.Item
-                    name="captcha"
-                    noStyle
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input the captcha you got!",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-                </Col>
-                <Col span={12}>
-                  <Button>Get captcha</Button>
-                </Col>
-              </Row>
-            </Form.Item>
+          <Form.Item
+            label="Captcha"
+            extra="We must make sure that your are a human."
+          >
+            <Row gutter={8}>
+              <Col span={12}>
+                <Form.Item
+                  name="captcha"
+                  noStyle
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input the captcha you got!",
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Button>Get captcha</Button>
+              </Col>
+            </Row>
+          </Form.Item>
 
-            <Form.Item
-              name="agreement"
-              valuePropName="checked"
-              rules={[
-                {
-                  validator: (_, value) =>
-                    value
-                      ? Promise.resolve()
-                      : Promise.reject(new Error("Should accept agreement")),
-                },
-              ]}
-              {...tailFormItemLayout}
-            >
-              <Checkbox>
-                I have read the <a href="">agreement</a>
-              </Checkbox>
-            </Form.Item>
-            <Form.Item {...tailFormItemLayout}>
-              <Button type="primary" htmlType="submit">
-                Register
-              </Button>
-            </Form.Item>
-          </Form>
-        </div>
+          <Form.Item
+            name="agreement"
+            valuePropName="checked"
+            rules={[
+              {
+                validator: (_, value) =>
+                  value
+                    ? Promise.resolve()
+                    : Promise.reject(new Error("Should accept agreement")),
+              },
+            ]}
+            {...tailFormItemLayout}
+          >
+            <Checkbox>
+              I have read the <a href="">agreement</a>
+            </Checkbox>
+          </Form.Item>
+          <Form.Item {...tailFormItemLayout}>
+            <Button type="primary" htmlType="submit">
+              Register
+            </Button>
+          </Form.Item>
+        </Form>
       </div>
-    </Layout>
+    </div>
   );
 };
