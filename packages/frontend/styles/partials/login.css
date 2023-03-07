@@ -1,0 +1,38 @@
+body {
+  background-color: #172b4d;
+}
+
+.dappsy-background-1 {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 52%;
+  background: linear-gradient(269.26deg, #4cc3dd 6.59%, #4a5dc6 94.04%);
+  clip-path: polygon(0 0, 100% 0, 100% 76%, 0 100%);
+  z-index: -1;
+}
+
+.dappsy-background-2 {
+  position: absolute;
+  top: 38%;
+  width: 100%;
+  height: 52%;
+  background: radial-gradient(
+    64.65% 109.1% at 55% -20.93%,
+    #1e3a6a 15.1%,
+    #172b4d 100%
+  );
+  z-index: -2;
+}
+
+.dappsy-button-primary {
+  border: #0f1b31;
+  background-color: #172b4d;
+  color: #adb5bd;
+}
+
+.dappsy-button-primary:hover {
+  border: #0f1b31;
+  background: linear-gradient(269.26deg, #172b4d 2%, #4a5dc6 98%);
+  color: #adb5bd;
+}

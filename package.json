@@ -1,25 +1,29 @@
 {
   "name": "dappsy",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "keywords": [
+    "ethereum",
+    "react",
+    "solidity",
+    "hardhat",
+    "next",
+    "yarn"
+  ],
+  "description": "dappsy source code",
+  "main": "index.js",
+  "repository": "https://github.com/Mthew/DappSy.git",
+  "author": "Mthew",
+  "license": "MIT",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "next": "12.3.1",
-    "openzeppelin-solidity": "^4.6.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "web3": "^1.8.0",
-    "web3-eth": "^1.8.0"
-  },
-  "devDependencies": {
-    "autoprefixer": "^10.4.12",
-    "eslint": "8.24.0",
-    "eslint-config-next": "12.3.1",
-    "tailwindcss": "^3.1.8"
+    "next:install": "cd packages/frontend && yarn install",
+    "next:dev": "cd packages/frontend && yarn run dev",
+    "next:build": "cd packages/frontend && yarn run build",
+    "next:start": "cd packages/frontend && yarn run start",
+    "next:lint": "cd packages/frontend && yarn run lint",
+    "sc:install": "cd packages/hardhat && yarn install",
+    "sc:compile": "cd packages/hardhat && npx hardhat compile",
+    "sc:test": "cd packages/hardhat && npx hardhat test",
+    "sc:node": "cd packages/hardhat && npx hardhat node",
+    "sc:deploy": "cd packages/hardhat && npx hardhat run scripts/deploy.js"
   }
 }
