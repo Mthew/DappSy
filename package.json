@@ -13,7 +13,7 @@
   "main": "index.js",
   "repository": "https://github.com/Mthew/DappSy.git",
   "author": "Mthew",
-  "license": "MIT",
+  "license": "MIT",  
   "scripts": {
     "next:install": "cd packages/frontend && yarn install",
     "next:dev": "cd packages/frontend && yarn run dev",
