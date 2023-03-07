@@ -1,37 +1,35 @@
-import React, { useState } from "react";
-import { Button, Menu } from "antd";
-import { AiMenuUnfoldOutlined, AiMenuFoldOutlined } from "react-icons";
+import Link from "next/link";
+import Logo from "./Logo";
+import styles from "./sidebar.module.css";
 
-import navigation, { createMenuItem } from "../../config/navigation";
+const navigation = [
+  { name: "Home", href: "/" },
+  { name: "Crear Proyecto", href: "/project/new" },
+  { name: "Mis Favoritos", href: "/favorites" },
+  { name: "Mis Proyectos", href: "/project" },
+  { name: "Mis Tokens", href: "/tokens" },
+  { component: <hr /> },
+  { name: "Perfil", href: "/profile" },
+  { name: "Mis Transacciones", href: "/transacctions" },
+];
 
-const Sidebar = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
-  };
+export default function Sidebar() {
   return (
-    <div
-      style={{
-        width: 256,
-      }}
-    >
-      {/* <Button
-        type="primary"
-        onClick={toggleCollapsed}
-        style={{
-          marginBottom: 16,
-        }}
-      >
-        {collapsed ? <AiMenuUnfoldOutlined /> : <AiMenuFoldOutlined />}
-      </Button> */}
-      {/* <Menu
-        defaultSelectedKeys={["1"]}
-        defaultOpenKeys={["sub1"]}
-        mode="inline"
-        inlineCollapsed={collapsed}
-        items={navigation && navigation.map((item, i) => createMenuItem({ key: i, ...item }))}
-      /> */}
-    </div>
+    <nav className={styles.nav}>
+      <Logo className="my-3" />
+      {/* <input className={styles.input} placeholder="Search..." /> */}
+      {navigation &&
+        navigation.map((item) =>
+          item.separator ? (
+            <hr />
+          ) : (
+            item.href && (
+              <Link href={item.href}>
+                <a>{item.name}</a>
+              </Link>
+            )
+          )
+        )}
+    </nav>
   );
-};
-export default Sidebar;
+}
