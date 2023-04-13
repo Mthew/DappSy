@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@animxyz/core": "^0.6.6",
-    "@ant-design/icons": "^4.7.0",
     "@rainbow-me/rainbowkit": "^0.7.1",
     "@tailwindcss/forms": "^0.5.3",
     "antd": "^4.23.6",
@@ -25,6 +24,7 @@
     "react-icons": "^4.6.0",
     "siwe": "^1.1.6",
     "sweetalert2": "^11.4.35",
+    "uid": "^2.0.2",
     "wagmi": "^0.6.8"
   },
   "devDependencies": {
