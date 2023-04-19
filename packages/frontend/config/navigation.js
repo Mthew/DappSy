@@ -1,59 +1,70 @@
+import { uid } from "uid";
 import Link from "next/link";
 import {
   AiFillAccountBook,
   AiFillHeart,
-  AiFillHome,
+  AiFillBuild,
   AiFillProject,
   AiOutlineTransaction,
   AiOutlineUser,
+  AiOutlineLogout
 } from "react-icons/ai";
 
-const navigation = [
+const navigation = [ 
   {
-    label: "Home",
-    icon: <AiFillHome />,
-    to: "/",
+    title: "Crear Proyecto",
+    icon: <AiFillBuild />,
+    to: "/favorites",
+  },  
+  {
+    type: "divider",
   },
   {
-    label: "Mis favoritos",
+    title: "Mis favoritos",
     icon: <AiFillHeart />,
     to: "/favorites",
   },
   {
-    label: "Mis Proyectos",
+    title: "Mis Proyectos",
     icon: <AiFillProject />,
-    to: "/favorites",
+    to: "/project",
   },
   {
-    label: "Mis Tokens",
+    title: "Mis Tokens",
     icon: <AiFillAccountBook />,
-    to: "/favorites",
+    to: "/tokens",
   },
   {
     type: "divider",
   },
   {
-    label: "Perfil",
+    title: "Perfil",
     icon: <AiOutlineUser />,
-    to: "/favorites",
+    to: "/profile",
   },
   {
-    label: "Transacciones",
+    title: "Transacciones",
     icon: <AiOutlineTransaction />,
-    to: "/favorites",
+    to: "/transacctions",
+  },
+  {
+    type: "divider",
+  },
+  {
+    title: "Cerrar Sesión",
+    icon: <AiOutlineLogout />,
+    to: "/logout",
   },
 ];
 
-export default navigation;
-export function createMenuItem({ label, key, icon, children, type, to }) {
-  if (to) {
-    children = <Link href={to}>{label}</Link>;
-  }
+function createMenuItem({ title, icon, children, type, to }) {  
   return {
-    key,
+    key: uid(8),
     icon,
     children,
-    label,
+    label: to ? <Link href={to}>{title}</Link> : title,
     type,
   };
 }
+
+export default navigation.map((item) => createMenuItem(item));

@@ -1,1 +1,3 @@
-export default () => <h1>TEST</h1>
+const Page = () => <h1>HOLA</h1>;
+
+export default Page;
