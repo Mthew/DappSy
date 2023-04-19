@@ -1,6 +1,6 @@
 import db from "../../../utils/db/server";
 
-export default async (req, res) => {
+const api = async (req, res) => {
   try {
     const entries = await db.collection('project').get();
     const entriesData = entries.docs.map(entry => entry.data());
@@ -9,3 +9,4 @@ export default async (req, res) => {
     res.status(400).end();
   }
 };
+export default api;

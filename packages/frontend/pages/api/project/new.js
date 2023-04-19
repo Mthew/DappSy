@@ -1,6 +1,6 @@
 import db from "../../../utils/db/server";
 
-export default async (req, res) => {
+const api = async (req, res) => {
   try {
     const { id } = await db.collection("project").add({
       ...req.body,
@@ -11,3 +11,5 @@ export default async (req, res) => {
     res.status(400).end();
   }
 };
+
+export default api;

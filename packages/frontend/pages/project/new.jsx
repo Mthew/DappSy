@@ -1,23 +1,17 @@
 import {
-  AutoComplete,
-  Button,
-  Cascader,
-  Checkbox,
   Col,
   Form,
   Input,
-  InputNumber,
   Row,
-  Select,
   Card,
 } from "antd";
 import React, { useState } from "react";
 
-import Layout from "../../components/Layout";
+import { Layout } from "../../components/Layout";
 import { MediaUpload, FileUpload } from "../../components/Project";
 import { CardContainer } from "../../components/Shared";
 
-export default () => {
+const NewProject = () => {
   return (
     <Layout>
       <Row gutter={[16, 16]}>
@@ -89,7 +83,7 @@ export default () => {
                   </Col>
                 </Row>
               </Card>
-              <Card title={"VALORACIÓN"} bordered={false}>                
+              <Card title={"VALORACIÓN"} bordered={false}>
                 <Row>
                   <Col span={8}>
                     <Form.Item label="Costo" name="cost">
@@ -102,7 +96,10 @@ export default () => {
                     </Form.Item>
                   </Col>
                   <Col span={8}>
-                    <Form.Item label="% de valorización por token" name="tokenPersentage">
+                    <Form.Item
+                      label="% de valorización por token"
+                      name="tokenPersentage"
+                    >
                       <Input />
                     </Form.Item>
                   </Col>
@@ -115,3 +112,5 @@ export default () => {
     </Layout>
   );
 };
+
+export default NewProject;
