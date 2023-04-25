@@ -1,5 +1,4 @@
 import { signOut, useSession } from "next-auth/react";
-import Link from "next/link";
 import { useDisconnect } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
@@ -31,27 +30,23 @@ export default function NavBar({ title }) {
             className="flex items-center rounded"
           />
         </div>
-        {session ? (
-          <Space className="ml-3 flex-none table-grid">
-            <Button
-              className="text-white inline-flex items-center"
-              icon={<AiOutlineShoppingCart size={25} />}
-              type="text"
-            >
-              Carrito
-            </Button>
-            <Button
-              className="text-white inline-flex items-center"
-              icon={<AiFillWallet size={25} />}
-              type="text"
-            >
-              Wallet
-            </Button>
-            <UserMenu />
-          </Space>
-        ) : (
-          <ConnectButton />
-        )}
+        <Space className="ml-3 flex-none table-grid">
+          <Button
+            className="text-white inline-flex items-center"
+            icon={<AiOutlineShoppingCart size={25} />}
+            type="text"
+          >
+            Carrito
+          </Button>
+          <Button
+            className="text-white inline-flex items-center"
+            icon={<AiFillWallet size={25} />}
+            type="text"
+          >
+            Wallet
+          </Button>
+          <UserMenu />
+        </Space>
       </nav>
     </Header>
   );

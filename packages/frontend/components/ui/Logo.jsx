@@ -1,20 +1,19 @@
-import { useRouter } from "next/router";
+import Link from "next/link";
 import { Spin } from "antd";
+import { ROUTES } from "../../utils";
 
-const Logo = ({ redirectToHome = false, loading, ...props }) => {
-  const { push } = useRouter();
-  const onclick = () => {
-    redirectToHome && push("/");
-  };
+const Logo = ({ redirectToHome = true, loading, ...props }) => {
   return loading ? (
     <div className="mx-10">
       <Spin />
     </div>
   ) : (
-    <div onclick={onclick}>
-      <h1 style={{ textAlign: "center", padding: "10px 20px" }} {...props}>
-        D A P P S Y
-      </h1>
+    <div className="cursor-pointer">
+      <Link href={ROUTES.home}>
+        <h1 style={{ textAlign: "center", padding: "10px 20px" }} {...props}>
+          D A P P S Y
+        </h1>
+      </Link>
     </div>
   );
 };

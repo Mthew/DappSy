@@ -58,7 +58,8 @@ export default function LayoutApp({ children, title }) {
               textAlign: "center",
             }}
           >
-            Technologico de Antioquia ©2023 Created by M_THEW
+            Tecnologico de Antioquia ©2023 Created by M_THEW<br />
+            v1.0.0
           </Footer>
         </Layout>
       </Layout>

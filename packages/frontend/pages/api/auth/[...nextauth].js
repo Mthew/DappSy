@@ -27,16 +27,17 @@ export default async function auth(req, res) {
           const siwe = new SiweMessage(
             JSON.parse(credentials?.message || "{}")
           );
-          console.log("PAS POR AQUI");
           // const result = await siwe.validate({
           //   signature: credentials?.signature || "",
           //   domain: nextAuthUrl.host,
           //   nonce: await getCsrfToken({ req }),
           // });
           const nonce = await getCsrfToken({ req });
-          const result = await siwe.validate(credentials?.signature || "");
+          // console.log("PAS POR AQUI", siwe);
+          // const result = await siwe.validate(credentials?.signature || "");
 
-          if (nonce === result?.nonce) {
+          // if (nonce === result?.nonce) {
+          if (nonce === siwe?.nonce) {
             return await new UserRepository().validate(siwe.address);
           }
           return null;
@@ -65,6 +66,7 @@ export default async function auth(req, res) {
     },
     pages: {
       signIn: "/auth/signin",
+      signOut: "/auth/signout",
     },
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
@@ -74,11 +76,12 @@ export default async function auth(req, res) {
         if (account) {
           token.address = account.address;
         }
-        
+
         return token;
       },
       async session({ session, token }) {
-        console.log("OE!! ======> ", session, token, user);
+        console.log("OE!! ======> ", session, token);
+        
         session.address = token.address;
         session.user.name = token.name;
         session.user.image = "https://www.fillmurray.com/128/128";

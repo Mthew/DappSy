@@ -1,23 +1,17 @@
-import { useEffect } from "react";
-import { getCsrfToken, signIn, useSession } from "next-auth/react";
 import { SiweMessage } from "siwe";
 import { useAccount, useConnect, useNetwork, useSignMessage } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
-import { useRouter } from "next/router";
-import style from "../../styles/modules/login.module.css"
+import style from "../../styles/modules/login.module.css";
 
-function SignIn({
-  label = "Sign-in",
+function Web3ButtonSigner({
+  label,
+  message,
   onConnect = () => {},
-  loading = false,
-  callbackUrl = "/",
   token,
 }) {
   const { signMessageAsync } = useSignMessage();
   const { chain } = useNetwork();
   const { address, isConnected } = useAccount();
-  const { push } = useRouter();
-  const { data: session, status } = useSession();
   const { connect } = useConnect({
     connector: new InjectedConnector(),
   });
@@ -28,44 +22,29 @@ function SignIn({
       if (!isConnected) {
         connect();
       } else {
-        events.handleLogin();
+        events.handleMessage();
       }
-      onConnect();
     },
-    handleLogin: async () => {
+    handleMessage: async () => {
       try {
-        const message = new SiweMessage({
+        const siweMessage = new SiweMessage({
           domain: window.location.host,
           address: address,
-          statement: "Sign in with Ethereum to the app.",
+          statement: message,
           uri: window.location.origin,
           version: "1",
           chainId: chain?.id,
           nonce: token,
         });
         const signature = await signMessageAsync({
-          message: message.prepareMessage(),
+          message: siweMessage.prepareMessage(),
         });
-        const { url } = await signIn("credentials", {
-          message: JSON.stringify(message),
-          redirect: false,
-          signature,
-          callbackUrl,
-        });
-        console.log("DATA", url);
-        push(url);
+        onConnect(signature, siweMessage);
       } catch (error) {
-        console.log("error", error);
+        console.log("connect-error", error);
       }
     },
   };
-
-  useEffect(() => {
-    console.log(isConnected);
-    if (isConnected && !session) {
-      events.handleLogin();
-    }
-  }, [isConnected]);
 
   return (
     <button
@@ -73,11 +52,11 @@ function SignIn({
       onClick={events.connect}
     >
       {label}&nbsp;
-      <span class="text-indigo-200" aria-hidden="true">
+      <span className="text-indigo-200" aria-hidden="true">
         &rarr;
       </span>
     </button>
   );
 }
 
-export default SignIn;
+export default Web3ButtonSigner;

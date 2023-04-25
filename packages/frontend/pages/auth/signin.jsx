@@ -6,8 +6,8 @@ import style from "../../styles/modules/login.module.css";
 function SignIn({ csrfToken }) {
   return (
     <>
-      <span class={style["dappsy-background-1"]}></span>
-      <span class={style["dappsy-background-2"]}></span>
+      <span className={style["dappsy-background-1"]}></span>
+      <span className={style["dappsy-background-2"]}></span>
       <div className="container mx-auto h-screen place-items-center">
         <header className="py-5 px-2 bg-none flex justify-between">
           <Logo className="text-white" />

@@ -7,32 +7,33 @@ import {
   AiFillProject,
   AiOutlineTransaction,
   AiOutlineUser,
-  AiOutlineLogout
+  AiOutlineLogout,
 } from "react-icons/ai";
+import { ROUTES } from "../utils";
 
-const navigation = [ 
+const navigation = [
   {
     title: "Crear Proyecto",
     icon: <AiFillBuild />,
-    to: "/favorites",
-  },  
+    to: ROUTES.newProject,
+  },
   {
     type: "divider",
   },
   {
     title: "Mis favoritos",
     icon: <AiFillHeart />,
-    to: "/favorites",
+    to: ROUTES.favorites,
   },
   {
     title: "Mis Proyectos",
     icon: <AiFillProject />,
-    to: "/project",
+    to: ROUTES.myProjects,
   },
   {
     title: "Mis Tokens",
     icon: <AiFillAccountBook />,
-    to: "/tokens",
+    to: ROUTES.tokens,
   },
   {
     type: "divider",
@@ -40,12 +41,12 @@ const navigation = [
   {
     title: "Perfil",
     icon: <AiOutlineUser />,
-    to: "/profile",
+    to: ROUTES.profile,
   },
   {
     title: "Transacciones",
     icon: <AiOutlineTransaction />,
-    to: "/transacctions",
+    to: ROUTES.transactions,
   },
   {
     type: "divider",
@@ -53,11 +54,11 @@ const navigation = [
   {
     title: "Cerrar Sesión",
     icon: <AiOutlineLogout />,
-    to: "/logout",
+    to: ROUTES.logout,
   },
 ];
 
-function createMenuItem({ title, icon, children, type, to }) {  
+function createMenuItem({ title, icon, children, type, to }) {
   return {
     key: uid(8),
     icon,
