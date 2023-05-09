@@ -1,0 +1,12 @@
+
+
+Estoy creando un sitio que es una especie de marketplace
+donde los usuarios van a poder crear colecciones de NFTs y posteriormente mintear los tokens de la colecciones
+
+En la aplicacion hay un formulario que me pide el nmbre de coleccion y la cantidad de tokens que va a tener.
+Tengo un contrato basico de ERC-721 para hacer el mint de los tokens.
+
+Estoy trabajando con Harthat y next js
+Mi pregunta es, cuando el usuario haga click en el boton crear colleción debo de desplegar el contrato correspondiente.
+como puedo ejecutar el comando hardhat dese node
+

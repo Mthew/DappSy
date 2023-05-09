@@ -32,15 +32,15 @@ export default async function auth(req, res) {
           //   domain: nextAuthUrl.host,
           //   nonce: await getCsrfToken({ req }),
           // });
-          const nonce = await getCsrfToken({ req });
+          // const nonce = await getCsrfToken({ req });
           // console.log("PAS POR AQUI", siwe);
           // const result = await siwe.validate(credentials?.signature || "");
 
           // if (nonce === result?.nonce) {
-          if (nonce === siwe?.nonce) {
+          // if (nonce === siwe?.nonce) {
             return await new UserRepository().validate(siwe.address);
-          }
-          return null;
+          // }
+          // return null;
         } catch (e) {
           console.log("Saco error", e);
           return null;

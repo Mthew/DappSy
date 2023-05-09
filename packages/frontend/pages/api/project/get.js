@@ -1,9 +1,8 @@
-import db from "../../../utils/db/server";
+import ProjectRepository from "../../../database/projectRepository";
 
 const api = async (req, res) => {
   try {
-    const entries = await db.collection('project').get();
-    const entriesData = entries.docs.map(entry => entry.data());
+    const entriesData = await new ProjectRepository().getAllDocuments();
     res.status(200).json(entriesData);
   } catch (e) {
     res.status(400).end();

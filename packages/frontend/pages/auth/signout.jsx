@@ -1,11 +1,11 @@
 import { useEffect, useContext } from "react";
 import { AuthContext } from "../../context";
 
-function signout() {
+function Signout() {
   const { logout } = useContext(AuthContext);
   useEffect(() => {
     logout();
-  }, []);
+  }, [logout]);
 
   return (
     <div className="content-center">
@@ -14,4 +14,4 @@ function signout() {
   );
 }
 
-export default signout;
+export default Signout;

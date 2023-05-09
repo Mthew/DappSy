@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
 import { Layout } from "../components/Layout";
-import { Row, Col } from "antd";
+import { Row, Col, Carousel, Progress } from "antd";
 import axios from "axios";
+import { ProjectCard } from "../components/Project";
 
 const products = [
   {
@@ -95,62 +95,66 @@ const Home = ({}) => {
     fetchData();
   }, []);
   return (
-    <div className="bg-white">
-      <div className="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
-        <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-          Customers also purchased
+    <div className="">
+      <div className="mx-auto max-w-2xl py-16 px-4 sm:py-5 sm:px-6 lg:max-w-7xl lg:px-8">
+        <Carousel afterChange={() => {}}>
+          {data.map((product, i) => (
+            <div key={i}>
+              {/* className="p-16 backdrop-blur bg-black bg-opacity-5" */}
+              <div
+                style={{
+                  backgroundImage: `url(${
+                    (product.imgs || ["/2.jpeg"])[0] || "/2.jpeg"
+                  })`,
+                  backgroundSize: "100%",
+                  backgroundPosition: "center",
+                }}
+                className="h-80"
+              >
+                <div className="w-full h-full p-16">
+                  <div className="w-2/4 p-8 backdrop-blur-sm bg-white bg-opacity-60 rounded">
+                    <h1 className="text-xl">{product.name}</h1>
+                    <div className="text-sm mt-3 font-medium">
+                      <div className=" flex justify-between ">
+                        <p>Volumen:</p>
+                        <p className="my-1 text-gray-500">
+                          {product.tokenCount}
+                        </p>
+                      </div>
+                      <div className=" flex justify-between ">
+                        <p>Valor del token:</p>
+                        <p className="my-1 text-gray-500">
+                          {product.tokenPrice}%
+                        </p>
+                      </div>
+
+                      <div className=" flex justify-between ">
+                        <p>Vendido:</p>
+                        <div className=" text-gray-500 w-2/4 flex justify-between my-1 ">
+                          <Progress
+                            percent={product.soldPercentage}
+                            strokeColor={"#11CDEF"}
+                            showInfo={false}
+                            style={{ marginRight: "7px" }}
+                          />
+                          {product.soldPercentage}%
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </Carousel>
+
+        <h2 className="my-6 text-2xl font-bold tracking-tight text-gray-900">
+          Proyectos en venta
         </h2>
 
         <Row className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {data != null &&
-            data.map((product) => (
-              <Col key={product.id} className="group relative">
-                <div className="min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:aspect-none lg:h-80">
-                  <img
-                    src={product.imageSrc || "/2.jpeg"}
-                    alt={product.imageAlt}
-                    className="h-full w-full object-cover object-center lg:h-full lg:w-full"
-                  />
-                </div>
-                <div className="mt-4 flex justify-between">
-                  <div>
-                    <h3 className="text-sm text-gray-700">
-                      <a href={product.href}>
-                        <span aria-hidden="true" className="absolute inset-0" />
-                        {product.name}
-                      </a>
-                    </h3>
-                  </div>
-                  <p className="text-sm font-medium text-gray-900">
-                    {product.price}
-                  </p>
-                </div>
-              </Col>
-            ))}
-          {products.map((product) => (
-            <Col key={product.id} className="group relative">
-              <div className="min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:aspect-none lg:h-80">
-                <img
-                  src={product.imageSrc}
-                  alt={product.imageAlt}
-                  className="h-full w-full object-cover object-center lg:h-full lg:w-full"
-                />
-              </div>
-              <div className="mt-4 flex justify-between">
-                <div>
-                  <h3 className="text-sm text-gray-700">
-                    <a href={product.href}>
-                      <span aria-hidden="true" className="absolute inset-0" />
-                      {product.name}
-                    </a>
-                  </h3>
-                </div>
-                <p className="text-sm font-medium text-gray-900">
-                  {product.price}
-                </p>
-              </div>
-            </Col>
-          ))}
+            data.map((product, i) => <ProjectCard key={i} data={product} />)}
         </Row>
       </div>
     </div>

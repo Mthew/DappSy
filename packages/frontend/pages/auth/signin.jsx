@@ -44,9 +44,11 @@ function SignIn({ csrfToken }) {
 }
 
 export async function getServerSideProps(context) {
+  const token = (await getCsrfToken(context)) || "";
+  console.log("TOKEN", token);
   return {
     props: {
-      csrfToken: await getCsrfToken(context),
+      csrfToken: token,
     },
   };
 }

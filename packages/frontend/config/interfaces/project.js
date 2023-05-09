@@ -8,6 +8,11 @@ export class Project {
   location;
   price;
   tokenCount;
+  category;
+  city;
+  cost;
+  country;
+  postalCode;
   created = new Date().toISOString();
   toObject = () => ({
     id: this.id,
@@ -16,9 +21,14 @@ export class Project {
     statusId: this.statusId,
     name: this.name,
     description: this.description,
-    location: this.location,
     price: this.price,
     tokenCount: this.tokenCount,
+    location: this.location,
+    category: this.category,
+    city: this.city,
+    cost: this.cost,
+    country: this.country,
+    postalCode: this.postalCode,
     created: this.created,
   });
 }
