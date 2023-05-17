@@ -35,21 +35,22 @@ export default function LayoutApp({ children, title }) {
             style={{
               margin: "0 16px",
             }}
-            className={style.main}
+            className={`${style.main} sm:px-2 md:px-4 lg:px-8 xl:px-10 2xl:px-16`}
           >
+            <Title
+              style={{ color: "white" }}
+              level={4}
+              className="flex-none ml-3"
+            >
+              {title}
+            </Title>
             <section
               style={{
                 padding: 24,
                 minHeight: 360,
               }}
+              className={`container mx-auto px-16`}
             >
-              <Title
-                style={{ color: "white" }}
-                level={4}
-                className="flex-none ml-3"
-              >
-                {title}
-              </Title>
               {children}
             </section>
           </Content>
@@ -58,7 +59,8 @@ export default function LayoutApp({ children, title }) {
               textAlign: "center",
             }}
           >
-            Tecnologico de Antioquia ©2023 Created by M_THEW<br />
+            Tecnologico de Antioquia ©2023 Created by M_THEW
+            <br />
             v1.0.0
           </Footer>
         </Layout>

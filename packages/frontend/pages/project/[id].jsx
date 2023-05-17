@@ -138,7 +138,7 @@ const ProjectGallery = ({ imgs }) => {
 const Project = ({ project }) => {
   return (
     <Layout title={project.name}>
-      <div className="mx-auto max-w-2xl py-16 px-4 sm:py-5 sm:px-6 lg:max-w-7xl lg:px-8">
+      <div className="mx-auto max-w-2xl py-16 px-4 md:px-1 sm:py-5 sm:px-6 lg:max-w-7xl lg:px-8">
         <Row>
           <Col span={12}>
             <Space direction="vertical" size={16}>
@@ -205,6 +205,9 @@ const Project = ({ project }) => {
               </Card>
             </Space>
           </Col>
+        </Row>
+        <Row>
+          
         </Row>
       </div>
     </Layout>
