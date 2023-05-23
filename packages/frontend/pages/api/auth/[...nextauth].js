@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { getCsrfToken } from "next-auth/react";
 import { SiweMessage } from "siwe";
 
-import { UserRepository } from "../../../database";
+import { UserModel } from "../../../database";
 
 export default async function auth(req, res) {
   const providers = [
@@ -38,7 +38,7 @@ export default async function auth(req, res) {
 
           // if (nonce === result?.nonce) {
           // if (nonce === siwe?.nonce) {
-            return await new UserRepository().validate(siwe.address);
+          return await validateSession(siwe.address);
           // }
           // return null;
         } catch (e) {
@@ -71,22 +71,32 @@ export default async function auth(req, res) {
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
       async jwt({ token, account, user }) {
-        console.log("JWT ======>", { token, account, user });
-
+        console.log("JWT", token, account, user);
         if (account) {
           token.address = account.address;
         }
-
         return token;
       },
       async session({ session, token }) {
-        console.log("OE!! ======> ", session, token);
-        
-        session.address = token.address;
+        console.log("AUTH", session, token);
+        session.user.address = token.address;
         session.user.name = token.name;
         session.user.image = "https://www.fillmurray.com/128/128";
         return session;
       },
     },
   });
+}
+
+async function validateSession(address) {
+  let user = await UserModel.findOne({ address });
+  if (user == null) {
+    user = await UserModel.create({
+      address,
+      name: `unnamed${Date.now().valueOf()}`,
+      profilePhoto: "https://www.fillmurray.com/128/128",
+      confirmed: false
+    });
+  }
+  return user;
 }

@@ -1,18 +1,33 @@
-import React from "react";
+import { useContext } from "react";
 import { Form, Input, Button, Col, Modal } from "antd";
 
-import { Card, Title, Row } from "../ui";
+import { ProfileContext } from "../../context";
 
-const ProfileForm = ({ visible, close = () => {} }) => {
+import { Card, Row } from "../ui";
+
+
+
+const ProfileForm = ({}) => {
+  const {
+    profile = {},
+    showForm,
+    showProfileForm,
+    saveProfileData,
+  } = useContext(ProfileContext);
   const handlers = {
-    save() {},
+    async save(values) {
+      await saveProfileData({
+        id: profile.id,
+        ...values,
+      });
+    },
     cancel() {
-      close();
+      showProfileForm(false);
     },
   };
   return (
     <Modal
-      open={visible}
+      open={showForm}
       width={1000}
       centered
       destroyOnClose
@@ -20,23 +35,54 @@ const ProfileForm = ({ visible, close = () => {} }) => {
       closable={false}
       title={"Actualizar datos personales"}
     >
-      <Form layout="vertical" onFinish={handlers.save}>
+      <Form layout="vertical" onFinish={handlers.save} initialValues={profile}>
         <Card title={"INFORMACIÓN PERSONAL"} bordered={false}>
           <Row>
             <Col span={12}>
-              <Form.Item label="Nombres" name="name">
+              <Form.Item
+                label="Nombres"
+                name="name"
+                rules={[
+                  {
+                    required: true,
+                    message: "¡El campo Nombres es obligatorio!",
+                  },
+                ]}
+              >
                 <Input />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item label="Apellidos" name="lastname">
+              <Form.Item
+                label="Apellidos"
+                name="lastname"
+                rules={[
+                  {
+                    required: true,
+                    message: "¡El campo Apellidos es obligatorio!",
+                  },
+                ]}
+              >
                 <Input />
               </Form.Item>
             </Col>
           </Row>
           <Row>
             <Col span={24}>
-              <Form.Item label="email" name="email">
+              <Form.Item
+                label="E-mail"
+                name="email"
+                rules={[
+                  {
+                    type: "email",
+                    message: "¡El E-mail no tiene un formato valido!",
+                  },
+                  {
+                    required: true,
+                    message: "¡El campo E-mail es obligatorio!",
+                  },
+                ]}
+              >
                 <Input />
               </Form.Item>
             </Col>
@@ -45,7 +91,16 @@ const ProfileForm = ({ visible, close = () => {} }) => {
         <Card title={"UBICACIÓN"} bordered={false}>
           <Row>
             <Col span={24}>
-              <Form.Item label="Dirección" name="location">
+              <Form.Item
+                label="Dirección"
+                name="location"
+                rules={[
+                  {
+                    required: true,
+                    message: "¡El campo Dirección es obligatorio!",
+                  },
+                ]}
+              >
                 <Input />
               </Form.Item>
             </Col>
@@ -68,10 +123,10 @@ const ProfileForm = ({ visible, close = () => {} }) => {
             </Col>
           </Row>
         </Card>
-        <Card title={"Acerca de mi"} bordered={false}>
+        <Card title={"ACERCA DE MI"} bordered={false}>
           <Row>
             <Col span={24}>
-              <Form.Item label="Biografia" name="bio">
+              <Form.Item label="Biografia" name="description">
                 <Input.TextArea showCount maxLength={255} />
               </Form.Item>
             </Col>
