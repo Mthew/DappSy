@@ -20,7 +20,7 @@ export default function NavBar({ title }) {
   const { disconnect } = useDisconnect();
 
   return (
-    <Header className="px-4">
+    <Header className="px-4 z-10 bg-transparent">
       <nav className="relative flex h-16 items-center justify-between">
         <Logo className="text-white" loading={loading} redirectToHome />
         <div className="grow">
