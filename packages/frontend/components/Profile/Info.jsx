@@ -1,26 +1,28 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Space, Button, Divider, Avatar, Typography } from "antd";
 import { AiFillEdit } from "react-icons/ai";
+
+import { ProfileContext } from "../../context";
 
 import { Card, Title } from "../ui";
 import { Form } from "./";
 
 const Text = Typography.Text;
 
-const Info = ({ user }) => {
-  const [formVisible, setFormVisible] = useState(false);
+const Info = ({}) => {
+  const { profile = {}, showForm, showProfileForm } = useContext(ProfileContext);
 
   const handlers = {
     edit() {
-      setFormVisible(true);
+      showProfileForm(true);
     },
     close() {
-      setFormVisible(false);
+      showProfileForm(false);
     },
   };
   return (
     <>
-      <Form visible={formVisible} close={handlers.close} />
+      <Form visible={showForm} close={handlers.close} />
       <Card
         extra={<AiFillEdit size={28} onClick={handlers.edit} />}
         title={
@@ -38,34 +40,46 @@ const Info = ({ user }) => {
           <Space direction="horizontal">
             <Button
               type="text"
-              icon={<Title level={3}>{user.tokens.length}</Title>}
+              icon={
+                <Title level={3}>
+                  {(profile?.tokens || { length: 0 }).length}
+                </Title>
+              }
             >
               tokens
             </Button>
             <Button
               type="text"
-              icon={<Title level={3}>{user.projects.length}</Title>}
+              icon={
+                <Title level={3}>
+                  {(profile?.projects || { length: 0 }).length}
+                </Title>
+              }
             >
               proyectos
             </Button>
             <Button
               type="text"
-              icon={<Title level={3}>{user.favorites.length}</Title>}
+              icon={
+                <Title level={3}>
+                  {(profile?.favorites || { length: 0 }).length}
+                </Title>
+              }
             >
               favoritos
             </Button>
           </Space>
           <Title className="mt-10" level={3}>
-            {user.name}
+            {profile?.name}
           </Title>
-          <Text level={4}>{user.city}</Text>
-          <Text level={4}>{user.location}</Text>
-          <Text level={4}>{user.email}</Text>
+          <Text level={4}>{profile?.city}</Text>
+          <Text level={4}>{profile?.location}</Text>
+          <Text level={4}>{profile?.email}</Text>
           <Divider />
           <Text style={{ textAlign: "left" }} level={4}>
             Bio
           </Text>
-          <Text level={4}>{user.bio}</Text>
+          <Text level={4}>{profile?.bio}</Text>
         </Space>
       </Card>
     </>

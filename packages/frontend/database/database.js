@@ -1,8 +1,6 @@
 import admin from "firebase-admin";
 import serviceAccount from "../serviceAccountKey.json";
 
-
-
 class Database {
   constructor() {
     if (this.instance) return this.instance;
@@ -48,13 +46,29 @@ class Database {
     return doc;
   }
 
+  async findOne(collection, searchConcept) {
+    const key = Object.keys(searchConcept)[0];
+    const value = searchConcept[key];
+
+    const entries = await this.firestore.collection(collection).get();
+    const entriesData = entries.docs.map((entry) => ({
+      id: entry.id,
+      ...entry.data(),
+    }));
+    const result = entriesData.find((entry) => entry[key] === value);
+    return result;
+  }
+
   async set(collection, id, document) {
     const doc = this.firestore.collection(collection).doc(id);
     const result = await doc.get();
 
     if (!result.exists) return null; // Record not found
 
-    await doc.set(document);
+    await doc.set({
+      ...result.data(),
+      ...document,
+    });
 
     document.id = id;
     return document;
