@@ -68,7 +68,7 @@ export default async function auth(req, res) {
       signIn: "/auth/signin",
       signOut: "/auth/signout",
     },
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: process.env.NEXT_PUBLIC_SECRET,
     callbacks: {
       async jwt({ token, account, user }) {
         console.log("JWT", token, account, user);

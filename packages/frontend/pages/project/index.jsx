@@ -7,6 +7,7 @@ const features = [
   { name: 'Considerations', description: 'Made from natural materials. Grain and color vary with each item.' },
 ]
 
+
 export default function Example() {
   return (
     <div className="bg-white">
