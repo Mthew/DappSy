@@ -1,56 +1,150 @@
-const features = [
-  { name: 'Origin', description: 'Designed by Good Goods, Inc.' },
-  { name: 'Material', description: 'Solid walnut base with rare earth magnets and powder coated steel card cover' },
-  { name: 'Dimensions', description: '6.25" x 3.55" x 1.15"' },
-  { name: 'Finish', description: 'Hand sanded and finished with natural oil' },
-  { name: 'Includes', description: 'Wood card tray and 3 refill packs' },
-  { name: 'Considerations', description: 'Made from natural materials. Grain and color vary with each item.' },
-]
+import React, { useState, useContext } from "react";
+import { useRouter } from "next/router";
+import { Col, Form, Input, Card, Button, Space } from "antd";
 
+//Context
+import { ProjectContext } from "../../context";
 
-export default function Example() {
+//Components
+import { Layout } from "../../components/Layout";
+import { MediaUpload, FileUpload } from "../../components/Project";
+import { Row } from "../../components/ui";
+import { CardContainer } from "../../components/Shared";
+
+import { ROUTES } from "../../utils";
+
+const NewProject = () => {
+  const { createProject } = useContext(ProjectContext);
+
+  const [files, setFiles] = useState([]);
+  const [images, setImages] = useState([]);
+  const router = useRouter();
+
+  const handlers = {
+    async save(values) {
+      values.imgs = images.map((img) => img.response.data);
+      createProject(values);
+      router.replace(ROUTES.home);
+    },
+    addImage: (newImages) => setImages(newImages),
+    addFile: (newFiles) => setFiles(newFiles),
+  };
   return (
-    <div className="bg-white">
-      <div className="mx-auto grid max-w-2xl grid-cols-1 items-center gap-y-16 gap-x-8 py-24 px-4 sm:px-6 sm:py-32 lg:max-w-7xl lg:grid-cols-2 lg:px-8">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Technical Specifications</h2>
-          <p className="mt-4 text-gray-500">
-            The walnut wood card tray is precision milled to perfectly fit a stack of Focus cards. The powder coated
-            steel divider separates active cards from new ones, or can be used to archive important task lists.
-          </p>
+    <Layout>
+      <Row>
+        <Col xs={24} sm={24} md={8} lg={8} xl={8}>
+          <Space size={[16, 16]} direction="vertical">
+            <CardContainer
+              title="Imagenes o videos"
+              subtitle={
+                "Tipos de archivos compatibles: JPG, PNG, SVG, MP4, WEBM, WAV. Tamaño máximo: 100 MB"
+              }
+            >
+              <MediaUpload onChange={handlers.addImage} />
+            </CardContainer>
+            <CardContainer
+              title="Imagenes o videos"
+              subtitle={
+                "Tipos de archivos compatibles: JPG, PNG y PDF. Tamaño máximo: 100 MB"
+              }
+            >
+              <FileUpload onChange={handlers.addFile} />
+            </CardContainer>
+          </Space>
+        </Col>
+        <Col xs={24} sm={24} md={16} lg={16} xl={16}>
+          <CardContainer title="Crear Nuevo Proyecto">
+            <Form layout="vertical" onFinish={handlers.save}>
+              <Card title={"INFORMACIÓN GENERAL"} bordered={false}>
+                <Row>
+                  <Col span={12}>
+                    <Form.Item label="Nombre del Proyecto" name="name">
+                      <Input />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item label="Categoria" name="category">
+                      <Input />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={24}>
+                    <Form.Item label="Descripción" name="description">
+                      <Input.TextArea showCount maxLength={255} />
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Card>
+              <Card title={"UBICACIÓN"} bordered={false}>
+                <Row>
+                  <Col span={24}>
+                    <Form.Item label="Dirección" name="location">
+                      <Input />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={8}>
+                    <Form.Item label="País" name="country">
+                      <Input />
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item label="Ciudad" name="city">
+                      <Input />
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item label="Postal" name="postalCode">
+                      <Input />
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Card>
+              <Card title={"VALORACIÓN"} bordered={false}>
+                <Row>
+                  <Col span={8}>
+                    <Form.Item label="Costo" name="cost">
+                      <Input />
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item label="Cantidad de Tokens" name="tokenCount">
+                      <Input />
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item
+                      label="% de valorización por token"
+                      name="tokenPersentage"
+                    >
+                      <Input />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row justify={"end"}>
+                  <Col
+                    span={3}
+                    style={{ display: "flex", flexDirection: "column" }}
+                  >
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4"
+                    >
+                      Guardar
+                    </Button>
+                    <Button>Cancelar</Button>
+                  </Col>
+                </Row>
+              </Card>
+            </Form>
+          </CardContainer>
+        </Col>
+      </Row>
+    </Layout>
+  );
+};
 
-          <dl className="mt-16 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 sm:gap-y-16 lg:gap-x-8">
-            {features.map((feature) => (
-              <div key={feature.name} className="border-t border-gray-200 pt-4">
-                <dt className="font-medium text-gray-900">{feature.name}</dt>
-                <dd className="mt-2 text-sm text-gray-500">{feature.description}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-        <div className="grid grid-cols-2 grid-rows-2 gap-4 sm:gap-6 lg:gap-8">
-          <img
-            src="https://tailwindui.com/img/ecommerce-images/product-feature-03-detail-01.jpg"
-            alt="Walnut card tray with white powder coated steel divider and 3 punchout holes."
-            className="rounded-lg bg-gray-100"
-          />
-          <img
-            src="https://tailwindui.com/img/ecommerce-images/product-feature-03-detail-02.jpg"
-            alt="Top down view of walnut card tray with embedded magnets and card groove."
-            className="rounded-lg bg-gray-100"
-          />
-          <img
-            src="https://tailwindui.com/img/ecommerce-images/product-feature-03-detail-03.jpg"
-            alt="Side of walnut card tray with card groove and recessed card area."
-            className="rounded-lg bg-gray-100"
-          />
-          <img
-            src="https://tailwindui.com/img/ecommerce-images/product-feature-03-detail-04.jpg"
-            alt="Walnut card tray filled with cards and card angled in dedicated groove."
-            className="rounded-lg bg-gray-100"
-          />
-        </div>
-      </div>
-    </div>
-  )
-}
+export default NewProject;

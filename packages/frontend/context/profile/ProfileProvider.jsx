@@ -8,10 +8,6 @@ export const ProfileContext = createContext({});
 export const ProfileProvider = ({ children }) => {
   const [state, dispatch] = useReducer(profileReducer, profileInitialState);
 
-  useEffect(() => {
-    console.log("STATE", state);
-  }, [state]);
-
   const getProfileInfo = async (name) => {
     const result = await axios.get(`/profile/${name}`, {
       params: { name },
@@ -26,13 +22,28 @@ export const ProfileProvider = ({ children }) => {
     dispatch({ type: "PROFILE-SHOW-FORM", payload: show });
 
   const saveProfileData = async (data) => {
-    console.log("profile-data ===>", data);
-    const result = await axios.put(`/profile`, data);
+    const result = await axios.put(`/profile`, { ...data, confirmed: true });
 
     console.log("updated-data", result);
     if (result.data) {
-    //   dispatch({ type: "PROFILE-SET", payload: result.data });
+      dispatch({ type: "PROFILE-SET", payload: result.data });
+      showProfileForm(false);
     }
+  };
+
+  const addToFavorites = async (project) => {
+    const result = await axios.put(`/profile`, {
+      ...state.profile,
+      favorites: [...(state.profile.favorites || []), project.id],
+    });
+
+    if (result.data) {
+      dispatch({ type: "PROFILE-FAVORITES-ADD", payload: project.id });
+    }
+  };
+
+  const isFavorite = (id) => {
+    return state.profile?.favorites?.includes(id);
   };
 
   return (
@@ -44,6 +55,8 @@ export const ProfileProvider = ({ children }) => {
         getProfileInfo,
         showProfileForm,
         saveProfileData,
+        addToFavorites,
+        isFavorite,
       }}
     >
       {children}

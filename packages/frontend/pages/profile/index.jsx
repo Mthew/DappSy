@@ -11,6 +11,24 @@ import { CoverPhoto, Info } from "../../components/Profile";
 
 const Text = Typography.Text;
 
+const ProjectList = ({ projects, title }) => {
+  if ((projects || { length: 0 }).length === 0)
+    return (
+      <Title className={"mt-12"} level={3}>
+        No hay {title} creados
+      </Title>
+    );
+
+  return projects.map((project, i) => (
+    <>
+      <Title className={"mt-12"} level={3}>
+        {title}
+      </Title>
+      <ProjectCard key={i} data={project} />
+    </>
+  ));
+};
+
 const Profile = ({}) => {
   const { user } = useContext(AuthContext);
   const {
@@ -46,16 +64,12 @@ const Profile = ({}) => {
       </Row>
       <Row>
         <Col xs={24} sm={24} md={16} xl={16} xxl={16}>
-          <Title className={"mt-12"} level={3}>
-            No tiene proyectos creados
-          </Title>
-          <Title className={"mt-12"} level={3}>
-            No ha comprado ningún tokens
-          </Title>
-          <Title className={"mt-12"} level={3}>
-            No tiene proyectos favoritos
-          </Title>
-          {/* liostar proyectos creados */}
+          <ProjectList projects={profile?.projects} title="proyectos" />
+          <ProjectList projects={profile?.tokens} title="tokens" />
+          <ProjectList
+            projects={profile?.favorites}
+            title="proyectos favoritos"
+          />
         </Col>
         <Col xs={24} sm={24} md={8} xl={8} xxl={8}>
           <Info />

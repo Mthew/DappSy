@@ -5,8 +5,6 @@ import { ProfileContext } from "../../context";
 
 import { Card, Row } from "../ui";
 
-
-
 const ProfileForm = ({}) => {
   const {
     profile = {},
@@ -87,6 +85,34 @@ const ProfileForm = ({}) => {
               </Form.Item>
             </Col>
           </Row>
+          {/* <Row>
+            <Col span={24}>
+              <Form.Item
+                label="Confirmar E-mail"
+                name="confirmEmail"
+                rules={[
+                  {
+                    type: "email",
+                    message: "¡El E-mail no tiene un formato valido!",
+                  },
+                  {
+                    required: true,
+                    message: "¡El campo E-mail es obligatorio!",
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue('email') === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error('Los correos electronicos no coinciden!'));
+                    },
+                  }),
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+          </Row> */}
         </Card>
         <Card title={"UBICACIÓN"} bordered={false}>
           <Row>

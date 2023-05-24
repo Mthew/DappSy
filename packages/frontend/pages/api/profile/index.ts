@@ -18,7 +18,7 @@ async function modifyProfileData(req, res) {
 
   if (!user) {
     return res.status(404).json({
-      message: `El usuario ${name} no existe`,
+      message: `El usuario ${user.name} no existe`,
     });
   }
 
