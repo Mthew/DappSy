@@ -3,7 +3,7 @@ import { UserModel } from "../../../database";
 export default function (req, res) {
   switch (req.method) {
     case "GET":
-      return getProfileInfoByName(req, res);
+      return getProfileInfoById(req, res);
 
     default:
       return res.status(400).json({
@@ -12,9 +12,9 @@ export default function (req, res) {
   }
 }
 
-async function getProfileInfoByName(req, res) {
-  const { name } = req.query;
-  const user = await UserModel.findOne({ name });
+async function getProfileInfoById(req, res) {
+  const { id } = req.query;
+  const user = await UserModel.getById(id);
 
   if (!user) {
     return res.status(404).json({

@@ -2,19 +2,21 @@ import React, { useState, useContext } from "react";
 import {
   Col,
   Space,
-  Image,
   Typography,
   Descriptions,
   Table,
   InputNumber,
+  Popconfirm,
+  Input,
+  Form,
 } from "antd";
 import { AiFillHeart } from "react-icons/ai";
-import { FaEthereum, FaMinus, FaPlus } from "react-icons/fa";
+import { FaEthereum, FaMinus, FaMoneyBillWave, FaPlus } from "react-icons/fa";
 import { MdGroup } from "react-icons/md";
-import { BsEyeFill, BsFillGrid1X2Fill } from "react-icons/bs";
+import { BsFillGrid1X2Fill, BsPercent } from "react-icons/bs";
 
 //Context
-import { ProjectContext, ProfileContext } from "../../context";
+import { ProjectContext, ProfileContext, SignerContext } from "../../context";
 
 //Database
 import { ProjectModel } from "../../database";
@@ -22,7 +24,13 @@ import { ProjectModel } from "../../database";
 //Components
 import { Layout } from "../../components/Layout";
 import { Row, Card, Button } from "../../components/ui";
-import { SalehistoryChart } from "../../components/Project";
+import {
+  SalehistoryChart,
+  ProjectFilesPreview,
+  ProjectGallery,
+  ProjectBuyTokensForm,
+} from "../../components/Project";
+import { showError } from "../../utils";
 
 const Text = Typography.Text;
 
@@ -108,45 +116,16 @@ const TransactionList = () => (
   <Table dataSource={dataSource} columns={columns} />
 );
 
-const ProjectGallery = ({ imgs }) => {
-  const [previewImg, setPreviewImg] = useState(false);
-  return (
-    <>
-      <Image
-        preview={{
-          previewImg: false,
-        }}
-        src={imgs[0]}
-        onClick={() => setPreviewImg(true)}
-      />
-      <div
-        style={{
-          display: "none",
-        }}
-      >
-        <Image.PreviewGroup
-          preview={{
-            previewImg,
-            onVisibleChange: (vis) => setPreviewImg(vis),
-          }}
-        >
-          {imgs.map((img, i) => (
-            <Image src={img} key={i} />
-          ))}
-        </Image.PreviewGroup>
-      </div>
-    </>
-  );
-};
-
 const Project = ({ project }) => {
-  const { addTokens, lessTokens, tokens } = useContext(ProjectContext);
+  const { favorites = 50 } = useContext(ProjectContext);
   const { isFavorite, addToFavorites } = useContext(ProfileContext);
+
   const handlers = {
-    addFavorite(){
+    addFavorite() {
       addToFavorites(project.id);
-    }
-  }
+    },
+  };
+
   return (
     <Layout title={project.name}>
       <Row>
@@ -159,17 +138,22 @@ const Project = ({ project }) => {
               title={project.name}
               extra={
                 <Space direction="horizontal">
-                  <Text>43</Text>
+                  <Text>{favorites}</Text>
                   <AiFillHeart />
                 </Space>
               }
               cover={<ProjectGallery imgs={project.imgs} />}
-            />
+            >
+              <ProjectFilesPreview files={project.documents} />
+            </Card>
             <Card title="Descripción del Proyecto" hoverable>
               <Text>{project.description}</Text>
             </Card>
             <Card title="Detalles" hoverable>
-              <Descriptions column={2}>
+              <Descriptions column={2} layout="vertical" bordered>
+                <Descriptions.Item label="Categoria">
+                  {project.category}
+                </Descriptions.Item>
                 <Descriptions.Item label="País">
                   {project.country}
                 </Descriptions.Item>
@@ -179,25 +163,29 @@ const Project = ({ project }) => {
                 <Descriptions.Item label="Ubicación">
                   {project.location}
                 </Descriptions.Item>
-                <Descriptions.Item label="Costo del Token">
-                  ${Number(project.cost) / Number(project.tokenCount)}
+                <Descriptions.Item label="Precio total" span={2}>
+                  {`$${project.cost}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                </Descriptions.Item>
+                <Descriptions.Item label="Cantidad">
+                  {`${project.tokenCount}`.replace(
+                    /\B(?=(\d{3})+(?!\d))/g,
+                    "."
+                  )}{" "}
+                  Tokens
+                </Descriptions.Item>
+                <Descriptions.Item label="Costo del token">
+                  {`$${project.tokenCost}`.replace(
+                    /\B(?=(\d{3})+(?!\d))/g,
+                    ","
+                  )}
+                </Descriptions.Item>
+                <Descriptions.Item label="Porcentaje de propiedad por token">
+                  {`${project.tokenPercentage || 0}%`}
                 </Descriptions.Item>
               </Descriptions>
             </Card>
             <Card hoverable>
-              <Space>
-                <InputNumber
-                  addonBefore={<FaPlus onClick={addTokens} />}
-                  addonAfter={<FaMinus onClick={lessTokens} />}
-                  step={1}
-                  min={1}
-                  value={tokens}
-                  {...(project.maxTokenByuser
-                    ? { max: project.maxTokenByuser }
-                    : {})}
-                />
-                <Button>Comprar tokens </Button>
-              </Space>
+              <ProjectBuyTokensForm tokenCost={project.tokenCost} projectId={project.id}/>
             </Card>
           </Space>
         </Col>
@@ -223,13 +211,14 @@ const Project = ({ project }) => {
                 10 Propietarios
               </Button>
               <Button icon={<BsFillGrid1X2Fill size={20} />} type="text">
-                10 Total
+                {`${project.tokenCount}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".")}{" "}
+                Tokens
               </Button>
-              <Button icon={<BsEyeFill size={20} />} type="text">
-                5.0k vizualizaciones
+              <Button icon={<FaMoneyBillWave size={20} />} type="text">
+                {`$${project.tokenCost}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
               </Button>
-              <Button icon={<AiFillHeart size={20} />} type="text">
-                50 Favoritos
+              <Button icon={<BsPercent size={20} />} type="text">
+                30% vendido
               </Button>
             </Card>
             <Card title={"Historial de ofertas"} hoverable>

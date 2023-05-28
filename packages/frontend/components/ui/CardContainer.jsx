@@ -1,6 +1,6 @@
 import { Card, Typography } from "antd";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const CardContainer = ({ title, subtitle, children }) => {
   return (
@@ -8,7 +8,9 @@ const CardContainer = ({ title, subtitle, children }) => {
       title={
         <>
           <Title level={4}>{title}</Title>
-          <p level={5}>{subtitle}</p>
+          <Text style={{ whiteSpace: "break-spaces" }}>
+            {subtitle}
+          </Text>
         </>
       }
       bordered={false}

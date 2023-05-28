@@ -3,8 +3,11 @@ import Image from "next/image";
 import NextLink from "next/link";
 import { Progress } from "antd";
 
-function ProjectCard({
-  data: {
+function ProjectCard({ data }) {
+  if (!data) {
+    return <></>;
+  }
+  const {
     id,
     name,
     href,
@@ -16,8 +19,7 @@ function ProjectCard({
     soldPercentage,
     price,
     color,
-  },
-}) {
+  } = data;
   return (
     <NextLink href={`/project/${id}`}>
       <div className="bg-white rounded-lg Open Sans cursor-pointer">

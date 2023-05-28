@@ -23,11 +23,12 @@ export const ProjectProvider = ({ children }) => {
     }
   };
 
-  const createProject = async (data) => {
+  const createProject = async (data, callback) => {
     const result = await axios.post(`/project`, data);
 
     if (result.data) {
       dispatch({ type: "PROJECTS-UPDATE", payload: result.data });
+      callback && callback();
     }
   };
 

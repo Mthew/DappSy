@@ -1,16 +1,26 @@
-import { createContext, useReducer, useEffect } from "react";
+import { createContext, useReducer, useEffect, useContext } from "react";
 
 import { axios } from "../../utils";
 import { profileReducer, profileInitialState } from "./ProfileReducer";
 
+import { AuthContext } from "../auth";
+
 export const ProfileContext = createContext({});
 
 export const ProfileProvider = ({ children }) => {
+  const { user } = useContext(AuthContext);
+
   const [state, dispatch] = useReducer(profileReducer, profileInitialState);
 
-  const getProfileInfo = async (name) => {
-    const result = await axios.get(`/profile/${name}`, {
-      params: { name },
+  useEffect(() => {
+    if (user) {
+      getProfileInfo(user.id);
+    }
+  }, [user]);
+
+  const getProfileInfo = async (id) => {
+    const result = await axios.get(`/profile/${id}`, {
+      params: { id },
     });
 
     if (result.data) {
@@ -31,19 +41,47 @@ export const ProfileProvider = ({ children }) => {
     }
   };
 
-  const addToFavorites = async (project) => {
+  const addToFavorites = async (projectId) => {
     const result = await axios.put(`/profile`, {
       ...state.profile,
-      favorites: [...(state.profile.favorites || []), project.id],
+      favorites: [...(state.profile.favorites || []), projectId],
     });
 
     if (result.data) {
-      dispatch({ type: "PROFILE-FAVORITES-ADD", payload: project.id });
+      dispatch({ type: "PROFILE-FAVORITES-ADD", payload: projectId });
     }
   };
+  const getFavorites = async () => {
+    if(state.profile?.favorites == null) return null;
 
-  const isFavorite = (id) => {
-    return state.profile?.favorites?.includes(id);
+    if(state.profile?.favorites?.length == 0) return null;
+
+    const result = await axios.get(`/projects`, {
+      params: {
+        ids: state.profile?.favorites,
+      },
+    });
+
+    if (result.data) {
+      dispatch({ type: "PROFILE-FAVORITES-SET", payload: result.data });
+    }
+  }
+  const isFavorite = (projectId) => {
+    return state.profile?.favorites?.includes(projectId);
+  };
+
+  const buyTokens = async (projectId, amount) => {
+    // const result = await axios.put(`/profile`, {
+    //   ...state.profile,
+    //   tokens: state.profile.tokens - amount,
+    //   projects: [
+    //     ...state.profile.projects,
+    //     {
+    //       projectId,
+    //       amount,
+    //     },
+    //   ],
+    // });
   };
 
   return (
@@ -57,6 +95,7 @@ export const ProfileProvider = ({ children }) => {
         saveProfileData,
         addToFavorites,
         isFavorite,
+        buyTokens,
       }}
     >
       {children}
