@@ -1,11 +1,7 @@
 import { SiweMessage } from "siwe";
 import { useAccount, useNetwork, useSignMessage } from "wagmi";
 
-
-import React from 'react'
-
-export const general = () => {
-
+export function useMessageSigner() {
   const { signMessageAsync } = useSignMessage();
   const { chain } = useNetwork();
   const { address, isConnected } = useAccount();
@@ -19,30 +15,27 @@ export const general = () => {
         events.handleMessage();
       }
     },
-    handleMessage: async () => {
+    handleMessage: async (message, onSign) => {
       try {
         const siweMessage = new SiweMessage({
           domain: window.location.host,
-          address: address,
+          address,
           statement: message,
           uri: window.location.origin,
           version: "1",
           chainId: chain?.id,
-          nonce: token,
         });
         const signature = await signMessageAsync({
           message: siweMessage.prepareMessage(),
         });
-        onConnect(signature, siweMessage);
+        onSign && onSign(signature, siweMessage);
       } catch (error) {
         console.log("connect-error", error);
       }
     },
   };
 
- 
-
-  return (
-    <div>general</div>
-  )
+  return {
+    showSignerMessage: events.handleMessage
+  }
 }

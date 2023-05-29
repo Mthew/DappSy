@@ -6,14 +6,17 @@ import { FaDollarSign } from "react-icons/fa";
 import { Button } from "../ui";
 
 //Contexts
-import { ProfileContext, SignerContext } from "../../context";
+import { ProjectContext } from "../../context";
+
+//hooks
+import { useMessageSigner } from "../../hooks";
 
 //Utils
 import { showError } from "../../utils";
 
 const ProjectBuyTopkensForm = ({ projectId, tokenCost }) => {
-  const { buyTokens } = useContext(ProfileContext);
-  const { showSignMessage } = useContext(SignerContext);
+  const { mint } = useContext(ProjectContext);
+  const { showSignerMessage } = useMessageSigner();
 
   const [form] = Form.useForm();
   const tokenCount = Form.useWatch("tokenCount", form);
@@ -28,14 +31,14 @@ const ProjectBuyTopkensForm = ({ projectId, tokenCost }) => {
       const { tokenCount } = values;
       console.log("values", values);
       if ([0, null, undefined].indexOf(tokenCount) >= 0)
-        return showError("Debe seleccionar una cantidad de tokens");
+        return showError("Debe seleccionar la cantidad de tokens");
 
-      showSignMessage(
+      showSignerMessage(
         `¿Desea comprar ${tokenCount} tokens, por un total de $${String(
           values.tokenCost
         ).replace(/\B(?=(\d{3})+(?!\d))/g, ",")} usd?`,
         async () => {
-          await buyTokens(projectId, tokenCount);
+          await mint(projectId, tokenCount);
         }
       );
     },

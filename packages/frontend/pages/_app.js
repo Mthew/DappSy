@@ -20,7 +20,6 @@ import {
   AuthProvider,
   ProfileProvider,
   ProjectProvider,
-  SignerProvider,
 } from "../context";
 
 const { chains, provider, webSocketProvider } = configureChains(
@@ -55,7 +54,6 @@ function MyApp({ Component, pageProps }) {
   return (
     <WagmiConfig client={wagmiClient}>
       <SessionProvider session={pageProps.session} refetchInterval={0}>
-        <SignerProvider>
           <AuthProvider>
             <ProfileProvider>
               <ProjectProvider>
@@ -73,7 +71,6 @@ function MyApp({ Component, pageProps }) {
               </ProjectProvider>
             </ProfileProvider>
           </AuthProvider>
-        </SignerProvider>
       </SessionProvider>
     </WagmiConfig>
   );

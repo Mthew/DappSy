@@ -1,11 +1,12 @@
 export const projectInitialState = {
   projects: [],
+  currentProject: null,
 };
 
 /**
  *
  * @param {projectInitialState} state
- * @param {{type: "PROJECTS-SET" | "PROJECTS-UPDATE", payload: any}} action
+ * @param {{type: "PROJECTS-SET" | "PROJECTS-UPDATE" | "PROJECTS-ADD" | "PROJECTS-SET-CURRENT", payload: any}} action
  */
 export const projectReducer = (state, action) => {
   switch (action.type) {
@@ -14,10 +15,23 @@ export const projectReducer = (state, action) => {
         ...state,
         projects: action.payload,
       };
-    case "PROJECTS-UPDATE":
+    case "PROJECTS-ADD":
       return {
         ...state,
         projects: [...state.projects, action.payload],
+      };
+    case "PROJECTS-UPDATE":
+      return {
+        ...state,
+        projects: state.projects.map((project) =>
+          project.id === action.payload.id ? action.payload : project
+        ),
+        currentProject: action.payload,
+      };
+    case "PROJECTS-SET-CURRENT":
+      return {
+        ...state,
+        currentProject: action.payload,
       };
     default:
       return state;

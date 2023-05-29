@@ -22,7 +22,13 @@ const ProjectFilesPreview = ({ files }) => {
           </Button>
         </Col>
       </Row>
-      <Modal open={visible} onOk={closeModal} onCancel={closeModal}>
+      <Modal
+        title="Documentos"
+        open={visible}
+        onCancel={closeModal}
+        onOk={closeModal}
+        cancelButtonProps={{ hidden: true }}
+      >
         <List
           style={{ margin: "10px 0px" }}
           dataSource={files}

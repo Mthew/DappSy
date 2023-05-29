@@ -48,12 +48,12 @@ const Home = ({}) => {
                         <p>Vendido:</p>
                         <div className=" text-gray-500 w-2/4 flex justify-between my-1 ">
                           <Progress
-                            percent={project.soldPercentage}
+                            percent={parseFloat(project.soldPercentage || 0).toFixed(2)}
                             strokeColor={"#11CDEF"}
                             showInfo={false}
                             style={{ marginRight: "7px" }}
                           />
-                          {project.soldPercentage}%
+                          {parseFloat(project.soldPercentage || 0).toFixed(2)}%
                         </div>
                       </div>
                     </div>

@@ -28,9 +28,9 @@ const NewProject = () => {
   useEffect(() => {
     if (projectCost && tokenCount) {
       const tokenCost = projectCost / tokenCount;
-      const tokenPersentage = (tokenCost * 100) / projectCost;
+      const tokenPercentage = (tokenCost * 100) / projectCost;
       form.setFieldsValue({ tokenCost });
-      form.setFieldsValue({ tokenPersentage });
+      form.setFieldsValue({ tokenPercentage });
     }
   }, [projectCost, tokenCount]);
 
@@ -41,6 +41,7 @@ const NewProject = () => {
 
       values.imgs = images.map((img) => img.response.data);
       values.documents = files.map((file) => file.response.data);
+      
       createProject(values, () => router.replace(ROUTES.home));
     },
     addImage: (newImages) => setImages(newImages),
@@ -62,7 +63,7 @@ const NewProject = () => {
               <MediaUpload onChange={handlers.addImage} />
             </CardContainer>
             <CardContainer
-              title="Imagenes o videos"
+              title="Documentos"
               subtitle={
                 "Tipos de archivos compatibles: JPG, PNG y PDF. Tamaño máximo: 100 MB"
               }
@@ -150,7 +151,7 @@ const NewProject = () => {
                   </Col>
                   <Col span={12}>
                     <Form.Item
-                      label="% de valorización por token"
+                      label="Costo por token"
                       name="tokenCost"
                       id="tokenCost"
                     >
@@ -173,7 +174,6 @@ const NewProject = () => {
                       disabled
                     >
                       <InputNumber
-                        defaultValue={100}
                         min={0}
                         max={100}
                         formatter={(value) => `${value}%`}
@@ -209,3 +209,5 @@ const NewProject = () => {
 };
 
 export default NewProject;
+
+

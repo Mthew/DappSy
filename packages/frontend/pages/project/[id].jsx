@@ -1,22 +1,12 @@
-import React, { useState, useContext } from "react";
-import {
-  Col,
-  Space,
-  Typography,
-  Descriptions,
-  Table,
-  InputNumber,
-  Popconfirm,
-  Input,
-  Form,
-} from "antd";
+import React, { useEffect, useContext } from "react";
+import { Col, Space, Typography, Descriptions, Table } from "antd";
 import { AiFillHeart } from "react-icons/ai";
 import { FaEthereum, FaMinus, FaMoneyBillWave, FaPlus } from "react-icons/fa";
-import { MdGroup } from "react-icons/md";
-import { BsFillGrid1X2Fill, BsPercent } from "react-icons/bs";
+import { MdSell } from "react-icons/md";
+import { BsFillGrid1X2Fill } from "react-icons/bs";
 
 //Context
-import { ProjectContext, ProfileContext, SignerContext } from "../../context";
+import { ProjectContext, ProfileContext } from "../../context";
 
 //Database
 import { ProjectModel } from "../../database";
@@ -29,100 +19,26 @@ import {
   ProjectFilesPreview,
   ProjectGallery,
   ProjectBuyTokensForm,
+  ProjectStats,
+  TransactionHistory
 } from "../../components/Project";
-import { showError } from "../../utils";
+import { showPercentage, showSuccess } from "../../utils";
 
 const Text = Typography.Text;
 
-const dataSource = [
-  {
-    unitPrice: "0.3",
-    unitPriceUSD: "$391.57",
-    quantity: 1,
-    floorDiff: "67% debajo",
-    expiredTime: "2 dias",
-  },
-  {
-    unitPrice: "0.3",
-    unitPriceUSD: "$391.57",
-    quantity: 1,
-    floorDiff: "67% debajo",
-    expiredTime: "2 dias",
-  },
-  {
-    unitPrice: "0.3",
-    unitPriceUSD: "$391.57",
-    quantity: 1,
-    floorDiff: "67% debajo",
-    expiredTime: "2 dias",
-  },
-  {
-    unitPrice: "0.3",
-    unitPriceUSD: "$391.57",
-    quantity: 1,
-    floorDiff: "67% debajo",
-    expiredTime: "2 dias",
-  },
-  {
-    unitPrice: "0.3",
-    unitPriceUSD: "$391.57",
-    quantity: 1,
-    floorDiff: "67% debajo",
-    expiredTime: "2 dias",
-  },
-  {
-    unitPrice: "0.3",
-    unitPriceUSD: "$391.57",
-    quantity: 1,
-    floorDiff: "67% debajo",
-    expiredTime: "2 dias",
-  },
-];
 
-const columns = [
-  {
-    title: "Precio Unitario",
-    dataIndex: "unitPrice",
-    key: "unitPrice",
-    render: (text) => (
-      <>
-        <FaEthereum /> {text} WETH
-      </>
-    ),
-  },
-  {
-    title: "Precio Unitario en USD",
-    dataIndex: "unitPriceUSD",
-    key: "unitPriceUSD",
-  },
-  {
-    title: "Cantidad",
-    dataIndex: "quantity",
-    key: "quantity",
-  },
-  {
-    title: "Diferencia de Suelo",
-    dataIndex: "floorDiff",
-    key: "floorDiff",
-  },
-  {
-    title: "Vencimiento",
-    dataIndex: "expiredTime",
-    key: "expiredTime",
-  },
-];
-
-const TransactionList = () => (
-  <Table dataSource={dataSource} columns={columns} />
-);
 
 const Project = ({ project }) => {
-  const { favorites = 50 } = useContext(ProjectContext);
+  const { favorites = 50, setCurrentProject } = useContext(ProjectContext);
   const { isFavorite, addToFavorites } = useContext(ProfileContext);
+
+  useEffect(() => {
+    setCurrentProject(project);
+  }, []);
 
   const handlers = {
     addFavorite() {
-      addToFavorites(project.id);
+      addToFavorites(project.id, () => showSuccess("Agregado a favoritos"));
     },
   };
 
@@ -180,12 +96,15 @@ const Project = ({ project }) => {
                   )}
                 </Descriptions.Item>
                 <Descriptions.Item label="Porcentaje de propiedad por token">
-                  {`${project.tokenPercentage || 0}%`}
+                  {showPercentage(project.tokenPercentage)}
                 </Descriptions.Item>
               </Descriptions>
             </Card>
             <Card hoverable>
-              <ProjectBuyTokensForm tokenCost={project.tokenCost} projectId={project.id}/>
+              <ProjectBuyTokensForm
+                tokenCost={project.tokenCost}
+                projectId={project.id}
+              />
             </Card>
           </Space>
         </Col>
@@ -207,22 +126,10 @@ const Project = ({ project }) => {
               )}
             </Card>
             <Card>
-              <Button icon={<MdGroup size={20} />} type="text">
-                10 Propietarios
-              </Button>
-              <Button icon={<BsFillGrid1X2Fill size={20} />} type="text">
-                {`${project.tokenCount}`.replace(/\B(?=(\d{3})+(?!\d))/g, ".")}{" "}
-                Tokens
-              </Button>
-              <Button icon={<FaMoneyBillWave size={20} />} type="text">
-                {`$${project.tokenCost}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-              </Button>
-              <Button icon={<BsPercent size={20} />} type="text">
-                30% vendido
-              </Button>
+              <ProjectStats />
             </Card>
-            <Card title={"Historial de ofertas"} hoverable>
-              <TransactionList />
+            <Card title={"Historial de transacciones"} hoverable>
+              <TransactionHistory />
             </Card>
             <Card>
               <SalehistoryChart />

@@ -18,13 +18,17 @@ export const ProfileProvider = ({ children }) => {
     }
   }, [user]);
 
+  const setProfile = (profile) => {
+    dispatch({ type: "PROFILE-SET", payload: profile });
+  };
+
   const getProfileInfo = async (id) => {
     const result = await axios.get(`/profile/${id}`, {
       params: { id },
     });
 
     if (result.data) {
-      dispatch({ type: "PROFILE-SET", payload: result.data });
+      setProfile(result.data);
     }
   };
 
@@ -36,12 +40,12 @@ export const ProfileProvider = ({ children }) => {
 
     console.log("updated-data", result);
     if (result.data) {
-      dispatch({ type: "PROFILE-SET", payload: result.data });
+      setProfile(result.data);
       showProfileForm(false);
     }
   };
 
-  const addToFavorites = async (projectId) => {
+  const addToFavorites = async (projectId, callback) => {
     const result = await axios.put(`/profile`, {
       ...state.profile,
       favorites: [...(state.profile.favorites || []), projectId],
@@ -49,39 +53,11 @@ export const ProfileProvider = ({ children }) => {
 
     if (result.data) {
       dispatch({ type: "PROFILE-FAVORITES-ADD", payload: projectId });
+      callback && callback();
     }
   };
-  const getFavorites = async () => {
-    if(state.profile?.favorites == null) return null;
-
-    if(state.profile?.favorites?.length == 0) return null;
-
-    const result = await axios.get(`/projects`, {
-      params: {
-        ids: state.profile?.favorites,
-      },
-    });
-
-    if (result.data) {
-      dispatch({ type: "PROFILE-FAVORITES-SET", payload: result.data });
-    }
-  }
   const isFavorite = (projectId) => {
     return state.profile?.favorites?.includes(projectId);
-  };
-
-  const buyTokens = async (projectId, amount) => {
-    // const result = await axios.put(`/profile`, {
-    //   ...state.profile,
-    //   tokens: state.profile.tokens - amount,
-    //   projects: [
-    //     ...state.profile.projects,
-    //     {
-    //       projectId,
-    //       amount,
-    //     },
-    //   ],
-    // });
   };
 
   return (
@@ -95,7 +71,7 @@ export const ProfileProvider = ({ children }) => {
         saveProfileData,
         addToFavorites,
         isFavorite,
-        buyTokens,
+        setProfile
       }}
     >
       {children}

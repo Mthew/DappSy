@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
     });
     disconnect();
     dispatch({ type: "AUTH-LOGOUT-PROCCESS" });
-    router.push(ROUTES.login);
+    return router.push(ROUTES.login);
   };
 
   return (
