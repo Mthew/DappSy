@@ -61,7 +61,7 @@ export default function LayoutApp({ children, title }) {
           >
             Tecnologico de Antioquia ©2023 Created by M_THEW
             <br />
-            v1.0.0
+            v1.0.1
           </Footer>
         </Layout>
       </Layout>
