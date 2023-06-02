@@ -79,8 +79,8 @@ export default async function auth(req, res) {
       },
       async session({ session, token }) {
         console.log("AUTH", session, token);
-        session.user.address = token.address;
         session.user.name = token.name;
+        session.user.id = token.sub;
         session.user.image = "https://www.fillmurray.com/128/128";
         return session;
       },

@@ -65,13 +65,14 @@ class Database {
 
     if (!result.exists) return null; // Record not found
 
-    await doc.set({
+    const data = {
       ...result.data(),
       ...document,
-    });
+    };
+    await doc.set(data);
 
-    document.id = id;
-    return document;
+    data.id = id;
+    return data;
   }
 
   async delete(collection, id) {

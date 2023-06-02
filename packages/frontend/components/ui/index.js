@@ -5,3 +5,4 @@ export * from "./Card";
 export * from "./Title";
 export * from "./Row";
 export * from "./Button";
+export { default as CardContainer } from "./CardContainer";

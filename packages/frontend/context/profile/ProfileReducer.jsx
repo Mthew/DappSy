@@ -6,7 +6,7 @@ export const profileInitialState = {
 /**
  *
  * @param {authInitialState} state
- * @param {{type: "PROFILE-SET" | "PROFILE-SHOW-FORM", payload: any}} action
+ * @param {{type: "PROFILE-SET" | "PROFILE-SHOW-FORM" | "PROFILE-FAVORITES-ADD" | "PROFILE-FAVORITES-REMOVE", payload: any}} action
  */
 export const profileReducer = (state, action) => {
   switch (action.type) {
@@ -20,6 +20,24 @@ export const profileReducer = (state, action) => {
         ...state,
         showForm: action.payload,
       };
+      case "PROFILE-FAVORITES-ADD":
+        return {
+          ...state,
+          profile: {
+            ...state.profile,
+            favorites: [...(state.profile.favorites || []), action.payload],
+          },
+        };
+        case "PROFILE-FAVORITES-REMOVE":
+          return {
+            ...state,
+            profile: {
+              ...state.profile,
+              favorites: state.profile.favorites.filter(
+                (favorite) => favorite.id !== action.payload
+              ),
+            },
+          };
     default:
       return state;
   }

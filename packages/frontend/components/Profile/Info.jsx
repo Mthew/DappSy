@@ -75,11 +75,10 @@ const Info = ({}) => {
           <Text level={4}>{profile?.city}</Text>
           <Text level={4}>{profile?.location}</Text>
           <Text level={4}>{profile?.email}</Text>
-          <Divider />
           <Text style={{ textAlign: "left" }} level={4}>
             Bio
           </Text>
-          <Text level={4}>{profile?.bio}</Text>
+          <Text level={4}>{profile?.description}</Text>
         </Space>
       </Card>
     </>

@@ -22,3 +22,27 @@ body {
 .bg-primary {
   background-color: #172b4d;
 }
+
+.ant-image-preview-img {
+  display: inline;
+}
+
+.ant-btn.ant-btn-primary {
+  background-color: #172b4d;
+  border-color: #172b4d;
+}
+
+div.dappsy-project-image-container {
+  width: 100%;
+}
+
+.dappsy-project-image-container > span{
+  position: unset !important;
+}
+
+.dappsy-project-image-container img{
+  object-fit: contain;
+  width: 100% !important;
+  position: relative !important;
+  height: unset !important;
+}
