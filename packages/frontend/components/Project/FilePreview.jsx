@@ -36,12 +36,12 @@ const ProjectFilesPreview = ({ files }) => {
             <List.Item
               key={i}
               actions={[
-                <a href={file} target="_blank">
+                <a key={`a-${i}`} href={file} target="_blank" rel="noreferrer">
                   <FaDownload />
                 </a>,
               ]}
             >
-              <a href={file} target="_blank">
+              <a href={file} target="_blank" rel="noreferrer">
                 <Text>{`Documeto #${i + 1}`}</Text>
               </a>
             </List.Item>

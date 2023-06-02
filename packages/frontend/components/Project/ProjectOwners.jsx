@@ -48,7 +48,10 @@ const ProjectOwners = ({}) => {
             <List.Item
               key={i}
               actions={[
-                <NextLink href={`${ROUTES.profile}/${owner.userId}`}>
+                <NextLink
+                  key={`link-${i}`}
+                  href={`${ROUTES.profile}/${owner.userId}`}
+                >
                   <a>
                     <FaEye />
                   </a>

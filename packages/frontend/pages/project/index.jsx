@@ -1,6 +1,15 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useRouter } from "next/router";
-import { Col, Form, Input, Card, Button, Space, InputNumber, Select } from "antd";
+import {
+  Col,
+  Form,
+  Input,
+  Card,
+  Button,
+  Space,
+  InputNumber,
+  Select,
+} from "antd";
 
 //Context
 import { ProjectContext } from "../../context";
@@ -11,7 +20,6 @@ import { MediaUpload, FileUpload } from "../../components/Project";
 import { Row, CardContainer } from "../../components/ui";
 
 import { ROUTES, PROJECT_CATEGORIES, showError } from "../../utils";
-
 
 const NewProject = () => {
   const { createProject } = useContext(ProjectContext);
@@ -36,12 +44,14 @@ const NewProject = () => {
 
   const handlers = {
     async save(values) {
-      if(images.length == 0) return showError("Debe agregar al menos una imagen");
-      if(files.length == 0) return showError("Debe agregar al menos un archivo");
+      if (images.length == 0)
+        return showError("Debe agregar al menos una imagen");
+      if (files.length == 0)
+        return showError("Debe agregar al menos un archivo");
 
       values.imgs = images.map((img) => img.response.data);
       values.documents = files.map((file) => file.response.data);
-      
+
       createProject(values, () => router.replace(ROUTES.home));
     },
     addImage: (newImages) => setImages(newImages),
@@ -85,8 +95,10 @@ const NewProject = () => {
                   <Col span={12}>
                     <Form.Item label="Categoria" name="category">
                       <Select>
-                        {PROJECT_CATEGORIES.map((category) => ( 
-                          <Select.Option value={category}>{category}</Select.Option>
+                        {PROJECT_CATEGORIES.map((category, i) => (
+                          <Select.Option key={i} value={category}>
+                            {category}
+                          </Select.Option>
                         ))}
                       </Select>
                     </Form.Item>
@@ -209,5 +221,3 @@ const NewProject = () => {
 };
 
 export default NewProject;
-
-
