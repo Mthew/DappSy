@@ -9,7 +9,12 @@ import { FcBullish } from "react-icons/fc";
 import { ProjectContext } from "../../context";
 
 //utils
-import { TRANSACTION_TYPE, showPrice, showQuantity } from "../../utils";
+import {
+  TRANSACTION_TYPE,
+  showPrice,
+  showQuantity,
+  getFormattedDate,
+} from "../../utils";
 
 const { Meta } = Card;
 
@@ -18,6 +23,8 @@ const columns = [
     title: "Fecha",
     dataIndex: "date",
     key: "date",
+    fixed: "left",
+    render: (text) => getFormattedDate(text),
   },
   {
     title: "Tipo de Transacción",
@@ -25,7 +32,7 @@ const columns = [
     key: "status",
     render: (text) => {
       switch (text) {
-        case TRANSACTION_TYPE.sell:
+        case TRANSACTION_TYPE.Creation:
           return (
             <div className="inline-flex items-center">
               <GiNewBorn color="green" /> CREACIÓN
@@ -83,5 +90,11 @@ const columns = [
 export const TransactionHistory = () => {
   const { currentProject } = useContext(ProjectContext);
 
-  return <Table dataSource={currentProject?.transactions} columns={columns} />;
+  return (
+    <Table
+      dataSource={currentProject?.transactions}
+      columns={columns}
+      className="overflow-x-auto"
+    />
+  );
 };

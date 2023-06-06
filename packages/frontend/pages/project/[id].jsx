@@ -20,13 +20,11 @@ import {
   ProjectGallery,
   ProjectBuyTokensForm,
   ProjectStats,
-  TransactionHistory
+  TransactionHistory,
 } from "../../components/Project";
 import { showPercentage, showSuccess } from "../../utils";
 
 const Text = Typography.Text;
-
-
 
 const Project = ({ project }) => {
   const { favorites = 50, setCurrentProject } = useContext(ProjectContext);
@@ -109,7 +107,7 @@ const Project = ({ project }) => {
           </Space>
         </Col>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-          <Space direction="vertical" size={16}>
+          <Space direction="vertical" size={16} className="max-w-full">
             <Card>
               {isFavorite(project.id) ? (
                 <Button icon={<AiFillHeart size={20} />} type="link">

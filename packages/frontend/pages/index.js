@@ -14,7 +14,7 @@ const Home = ({}) => {
     <div className="">
       <div className="mx-auto max-w-2xl py-16 px-4 sm:py-5 sm:px-6 lg:max-w-7xl lg:px-8">
         <Carousel afterChange={() => {}}>
-          {projects.map((project, i) => (
+          {projects.slice(0, 3).map((project, i) => (
             <div key={i}>
               {/* className="p-16 backdrop-blur bg-black bg-opacity-5" */}
               <div
@@ -48,7 +48,9 @@ const Home = ({}) => {
                         <p>Vendido:</p>
                         <div className=" text-gray-500 w-2/4 flex justify-between my-1 ">
                           <Progress
-                            percent={parseFloat(project.soldPercentage || 0).toFixed(2)}
+                            percent={parseFloat(
+                              project.soldPercentage || 0
+                            ).toFixed(2)}
                             strokeColor={"#11CDEF"}
                             showInfo={false}
                             style={{ marginRight: "7px" }}
