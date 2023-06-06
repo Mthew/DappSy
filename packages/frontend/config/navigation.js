@@ -20,21 +20,21 @@ const navigation = [
   {
     type: "divider",
   },
-  {
-    title: "Mis favoritos",
-    icon: <AiFillHeart />,
-    to: ROUTES.favorites,
-  },
-  {
-    title: "Mis Proyectos",
-    icon: <AiFillProject />,
-    to: ROUTES.myProjects,
-  },
-  {
-    title: "Mis Tokens",
-    icon: <AiFillAccountBook />,
-    to: ROUTES.tokens,
-  },
+  // {
+  //   title: "Mis favoritos",
+  //   icon: <AiFillHeart />,
+  //   to: ROUTES.favorites,
+  // },
+  // {
+  //   title: "Mis Proyectos",
+  //   icon: <AiFillProject />,
+  //   to: ROUTES.myProjects,
+  // },
+  // {
+  //   title: "Mis Tokens",
+  //   icon: <AiFillAccountBook />,
+  //   to: ROUTES.tokens,
+  // },
   {
     type: "divider",
   },
@@ -43,11 +43,11 @@ const navigation = [
     icon: <AiOutlineUser />,
     to: ROUTES.profile,
   },
-  {
-    title: "Transacciones",
-    icon: <AiOutlineTransaction />,
-    to: ROUTES.transactions,
-  },
+  // {
+  //   title: "Transacciones",
+  //   icon: <AiOutlineTransaction />,
+  //   to: ROUTES.transactions,
+  // },
   {
     type: "divider",
   },

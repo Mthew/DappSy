@@ -1,6 +1,7 @@
 {
   "name": "dappsy",
   "version": "1.0.0",
+  "author": "Mthew",
   "keywords": [
     "ethereum",
     "react",
@@ -13,7 +14,6 @@
   "description": "dappsy source code",
   "main": "index.js",
   "repository": "https://github.com/Mthew/DappSy.git",
-  "author": "Mthew",
   "license": "MIT",
   "scripts": {
     "next:install": "cd packages/frontend && yarn install",
