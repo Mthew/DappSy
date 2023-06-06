@@ -14,7 +14,7 @@ const Text = Typography.Text;
 
 const Profile = ({}) => {
   const { profile = {}, showProfileForm } = useContext(ProfileContext);
-
+  console.log("profile ======>", profile);
   return (
     <Layout title="Perfil">
       <CoverPhoto
@@ -48,18 +48,20 @@ const Profile = ({}) => {
             loadData
             brakePoints={{ xs: 24, sm: 12, md: 8, lg: 8, xl: 8 }}
           />
-          <ProjectCardList
-            projects={profile?.tokens?.map((token) => token.projectId)}
-            title="Tokens Adquiridos"
-            loadData
-            brakePoints={{ xs: 24, sm: 12, md: 8, lg: 8, xl: 8 }}
-          />
+          {/* {profile?.tokens && (
+            <ProjectCardList
+              projects={profile?.tokens?.map((token) => token.projectId)}
+              title="Tokens Adquiridos"
+              loadData
+              brakePoints={{ xs: 24, sm: 12, md: 8, lg: 8, xl: 8 }}
+            />
+          )} */}
           <ProjectCardList
             projects={profile?.favorites}
             title="proyectos favoritos"
             loadData
             brakePoints={{ xs: 24, sm: 12, md: 8, lg: 8, xl: 8 }}
-          /> 
+          />
         </Col>
         <Col
           xs={{ span: 24, order: 1 }}

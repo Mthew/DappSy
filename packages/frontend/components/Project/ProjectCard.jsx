@@ -33,7 +33,7 @@ function ProjectCard({ data, loadData }) {
 
   return (
     <NextLink href={`/project/${id}`}>
-      <div className="bg-white rounded-lg Open Sans cursor-pointer">
+      <div className="bg-white rounded-lg Open Sans cursor-pointer hover:shadow-lg">
         <div className="min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-lg bg-gray-200 group-hover:opacity-75 lg:aspect-none lg:h-80">
           <img
             src={(imgs || ["/2.jpeg"])[0] || "/2.jpeg"}

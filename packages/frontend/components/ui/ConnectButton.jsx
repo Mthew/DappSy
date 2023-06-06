@@ -1,20 +1,69 @@
+import { useEffect } from "react";
 import { SiweMessage } from "siwe";
 import { useAccount, useConnect, useNetwork, useSignMessage } from "wagmi";
+import { Modal } from "antd";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import style from "../../styles/modules/login.module.css";
 
-function Web3ButtonSigner({
-  label,
-  message,
-  onConnect = () => {},
-  token,
-}) {
+const { confirm } = Modal;
+
+const showConfirm = () => {
+  confirm({
+    title: "No tiene metamask intalado para poder conectarse",
+    icon: <aiOutlineExclamationCircle />,
+    content: (
+      <>
+        Para instalarlo siga los pasos de este tutorial:
+        <br />
+        <a
+          href="https://metamask.io/download/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          1. Descargar Metamask
+        </a>
+        <br />
+        <a
+          href="https://support.metamask.io/hc/es/articles/360015489531-Comenzar-con-MetaMask"
+          target="_blank"
+          rel="noreferrer"
+        >
+          2. Ver turorial de instalación
+        </a>
+      </>
+    ),
+    cancelButtonProps: {
+      hidden: true,
+    },
+    onOk() {
+      console.log("OK");
+    },
+    onCancel() {
+      console.log("Cancel");
+    },
+  });
+};
+
+function Web3ButtonSigner({ label, message, onConnect = () => {}, token }) {
   const { signMessageAsync } = useSignMessage();
   const { chain } = useNetwork();
   const { address, isConnected } = useAccount();
-  const { connect } = useConnect({
+  const { connect, error } = useConnect({
     connector: new InjectedConnector(),
   });
+
+  useEffect(() => {
+    if (!isConnected) {
+      connect();
+    }
+  }, [isConnected]);
+
+  useEffect(() => {
+    console.log("error", { error });
+    if (error && error.name === "ConnectorNotFoundError") {
+      showConfirm();
+    }
+  }, [error]);
 
   const events = {
     connect: (e) => {
