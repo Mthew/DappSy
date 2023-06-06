@@ -1,5 +1,4 @@
 import { uid } from "uid";
-import Link from "next/link";
 import {
   AiFillAccountBook,
   AiFillHeart,
@@ -63,7 +62,7 @@ function createMenuItem({ title, icon, children, type, to }) {
     key: uid(8),
     icon,
     children,
-    label: to ? <Link href={to}>{title}</Link> : title,
+    label: to ? <a href={to}>{title}</a> : title,
     type,
   };
 }
