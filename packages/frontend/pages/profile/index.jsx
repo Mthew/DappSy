@@ -56,7 +56,6 @@ const Profile = ({}) => {
               brakePoints={{ xs: 24, sm: 12, md: 8, lg: 8, xl: 8 }}
             />
           )} */}
-
           <ProjectCardList
             projects={profile?.favorites}
             title="proyectos favoritos"
