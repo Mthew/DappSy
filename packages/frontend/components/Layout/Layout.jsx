@@ -1,10 +1,11 @@
 import Head from "next/head";
 import { Breadcrumb, Layout, Typography } from "antd";
 
-import { Header } from "./";
+import { Header, Footer } from "./";
+
 import style from "./styles/layout.module.css";
 
-const { Content, Footer } = Layout;
+const { Content } = Layout;
 const { Title } = Typography;
 
 export default function LayoutApp({ children, title }) {
@@ -54,15 +55,7 @@ export default function LayoutApp({ children, title }) {
               {children}
             </section>
           </Content>
-          <Footer
-            style={{
-              textAlign: "center",
-            }}
-          >
-            Tecnologico de Antioquia ©2023 Created by M_THEW
-            <br />
-            v1.0.2
-          </Footer>
+          <Footer />
         </Layout>
       </Layout>
     </>
