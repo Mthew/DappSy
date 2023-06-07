@@ -32,3 +32,5 @@ export const TRANSACTION_TYPE = {
   Creation: 0,
   Sell: 1,
 };
+
+export const DOMAIN_NAME = process.env.DOMAIN_NAME;
