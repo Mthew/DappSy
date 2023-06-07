@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { Modal, Upload } from "antd";
+// import { storage } from "../../ ";
+// import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {

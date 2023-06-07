@@ -43,7 +43,7 @@ export const showInfo = (message, duration) => {
 };
 
 export const showWarning = (message, duration) => {
-  showMessage(TYPE_MESSAGE.warning, message, duration);
+  showMessage(TYPE_MESSAGE.Warning, message, duration);
 };
 
 export const confirm = ({
@@ -56,6 +56,17 @@ export const confirm = ({
     okText,
     cancelText,
     title,
+    ...rest,
+  });
+
+export const showWarningAlert = ({ message, title, onOk, ...rest }) =>
+  Modal.warning({
+    content: message,
+    title,
+    onOk: () => {
+      Modal.destroyAll();
+      onOk();
+    },
     ...rest,
   });
 
