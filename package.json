@@ -26,5 +26,8 @@
     "sc:test": "cd packages/hardhat && npx hardhat test",
     "sc:node": "cd packages/hardhat && npx hardhat node",
     "sc:deploy": "cd packages/hardhat && npx hardhat run scripts/deploy.js"
+  },
+  "dependencies": {
+    "moment": "^2.29.4"
   }
 }

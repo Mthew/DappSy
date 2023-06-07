@@ -2,6 +2,7 @@ import Head from "next/head";
 import { Breadcrumb, Layout, Typography } from "antd";
 
 import { Header, Footer } from "./";
+import { LoadingRouter } from "../ui";
 
 import style from "./styles/layout.module.css";
 
@@ -38,6 +39,7 @@ export default function LayoutApp({ children, title }) {
             }}
             className={`${style.main} sm:px-2 md:px-4 lg:px-8 xl:px-10 2xl:px-16`}
           >
+            <LoadingRouter />
             <Title
               style={{ color: "white" }}
               level={4}

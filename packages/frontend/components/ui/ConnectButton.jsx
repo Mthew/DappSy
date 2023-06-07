@@ -9,13 +9,14 @@ const { confirm } = Modal;
 
 const showConfirm = () => {
   confirm({
-    title: "No tiene metamask intalado para poder conectarse",
+    title: "¡No tiene metamask instalado!",
     icon: <aiOutlineExclamationCircle />,
     content: (
       <>
-        Para instalarlo siga los pasos de este tutorial:
+        Para instalarlo siga los siguientes pasos:
         <br />
         <a
+          className="underline"
           href="https://metamask.io/download/"
           target="_blank"
           rel="noreferrer"
@@ -27,6 +28,7 @@ const showConfirm = () => {
           href="https://support.metamask.io/hc/es/articles/360015489531-Comenzar-con-MetaMask"
           target="_blank"
           rel="noreferrer"
+          className="underline"
         >
           2. Ver turorial de instalación
         </a>
@@ -36,10 +38,10 @@ const showConfirm = () => {
       hidden: true,
     },
     onOk() {
-      console.log("OK");
+      Modal.destroyAll();
     },
     onCancel() {
-      console.log("Cancel");
+      Modal.destroyAll();
     },
   });
 };

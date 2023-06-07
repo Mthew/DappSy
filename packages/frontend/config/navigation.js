@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { uid } from "uid";
 import {
   AiFillAccountBook,
@@ -7,10 +8,16 @@ import {
   AiOutlineTransaction,
   AiOutlineUser,
   AiOutlineLogout,
+  AiFillHome,
 } from "react-icons/ai";
 import { ROUTES } from "../utils";
 
 const navigation = [
+  {
+    title: "Home",
+    icon: <AiFillHome />,
+    to: ROUTES.home,
+  },
   {
     title: "Crear Proyecto",
     icon: <AiFillBuild />,
@@ -19,21 +26,21 @@ const navigation = [
   {
     type: "divider",
   },
-  // {
-  //   title: "Mis favoritos",
-  //   icon: <AiFillHeart />,
-  //   to: ROUTES.favorites,
-  // },
-  // {
-  //   title: "Mis Proyectos",
-  //   icon: <AiFillProject />,
-  //   to: ROUTES.myProjects,
-  // },
-  // {
-  //   title: "Mis Tokens",
-  //   icon: <AiFillAccountBook />,
-  //   to: ROUTES.tokens,
-  // },
+  {
+    title: "Mis favoritos",
+    icon: <AiFillHeart />,
+    to: ROUTES.favorites,
+  },
+  {
+    title: "Mis Proyectos",
+    icon: <AiFillProject />,
+    to: ROUTES.myProjects,
+  },
+  {
+    title: "Mis Tokens",
+    icon: <AiFillAccountBook />,
+    to: ROUTES.tokens,
+  },
   {
     type: "divider",
   },
@@ -42,11 +49,11 @@ const navigation = [
     icon: <AiOutlineUser />,
     to: ROUTES.profile,
   },
-  // {
-  //   title: "Transacciones",
-  //   icon: <AiOutlineTransaction />,
-  //   to: ROUTES.transactions,
-  // },
+  {
+    title: "Transacciones",
+    icon: <AiOutlineTransaction />,
+    to: ROUTES.transactions,
+  },
   {
     type: "divider",
   },
@@ -62,7 +69,13 @@ function createMenuItem({ title, icon, children, type, to }) {
     key: uid(8),
     icon,
     children,
-    label: to ? <a href={to}>{title}</a> : title,
+    label: to ? (
+      <Link href={to} passHref>
+        <a href={to}>{title}</a>
+      </Link>
+    ) : (
+      title
+    ),
     type,
   };
 }
