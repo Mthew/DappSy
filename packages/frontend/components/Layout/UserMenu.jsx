@@ -27,9 +27,7 @@ const App = () => {
       </a>
     </Dropdown>
   ) : (
-    <Link href={ROUTES.login}>
-      <a>Iniciar sesion</a>
-    </Link>
+    <Link href={ROUTES.login}>Iniciar sesion</Link>
   );
 };
 export default App;

@@ -71,7 +71,7 @@ function createMenuItem({ title, icon, children, type, to }) {
     children,
     label: to ? (
       <Link href={to} passHref>
-        <a href={to}>{title}</a>
+        {title}
       </Link>
     ) : (
       title

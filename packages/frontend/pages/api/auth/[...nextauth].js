@@ -23,7 +23,6 @@ export default async function auth(req, res) {
       },
       async authorize(credentials) {
         try {
-          console.log("CREDENTIALS", credentials);
           const siwe = new SiweMessage(
             JSON.parse(credentials?.message || "{}")
           );
@@ -33,7 +32,7 @@ export default async function auth(req, res) {
           //   nonce: await getCsrfToken({ req }),
           // });
           // const nonce = await getCsrfToken({ req });
-          // console.log("PAS POR AQUI", siwe);
+          //
           // const result = await siwe.validate(credentials?.signature || "");
 
           // if (nonce === result?.nonce) {
@@ -42,7 +41,6 @@ export default async function auth(req, res) {
           // }
           // return null;
         } catch (e) {
-          console.log("Saco error", e);
           return null;
         }
       },
@@ -71,14 +69,12 @@ export default async function auth(req, res) {
     secret: process.env.NEXT_PUBLIC_SECRET,
     callbacks: {
       async jwt({ token, account, user }) {
-        console.log("JWT", token, account, user);
         if (account) {
           token.address = account.address;
         }
         return token;
       },
       async session({ session, token }) {
-        console.log("AUTH", session, token);
         session.user.name = token.name;
         session.user.id = token.sub;
         session.user.image = "https://www.fillmurray.com/128/128";
@@ -95,7 +91,7 @@ async function validateSession(address) {
       address,
       name: `unnamed${Date.now().valueOf()}`,
       profilePhoto: "https://www.fillmurray.com/128/128",
-      confirmed: false
+      confirmed: false,
     });
   }
   return user;

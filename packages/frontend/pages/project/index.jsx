@@ -12,17 +12,23 @@ import {
 } from "antd";
 
 //Context
-import { ProjectContext } from "../../context";
+import { ProjectContext, ProfileContext } from "../../context";
 
 //Components
 import { Layout } from "../../components/Layout";
 import { MediaUpload, FileUpload } from "../../components/Project";
 import { Row, CardContainer } from "../../components/ui";
 
-import { ROUTES, PROJECT_CATEGORIES, showError } from "../../utils";
+import {
+  ROUTES,
+  PROJECT_CATEGORIES,
+  showError,
+  showWarningAlert,
+} from "../../utils";
 
 const NewProject = () => {
   const { createProject } = useContext(ProjectContext);
+  const { profile } = useContext(ProfileContext);
 
   const [files, setFiles] = useState([]);
   const [images, setImages] = useState([]);
@@ -41,6 +47,16 @@ const NewProject = () => {
       form.setFieldsValue({ tokenPercentage });
     }
   }, [projectCost, tokenCount]);
+
+  if (profile?.confirmed == false) {
+    showWarningAlert({
+      title: "Información de contacto sin configurar",
+      message:
+        "Por favor, diligencie su información de contacto para poder crear un proyecto.",
+      onOk: () => router.replace(ROUTES.profile),
+    });
+    return <>Aún no ha diligenciado su información de contacto</>;
+  }
 
   const handlers = {
     async save(values) {
