@@ -26,21 +26,21 @@ const navigation = [
   {
     type: "divider",
   },
-  // {
-  //   title: "Mis favoritos",
-  //   icon: <AiFillHeart />,
-  //   to: ROUTES.favorites,
-  // },
-  // {
-  //   title: "Mis Proyectos",
-  //   icon: <AiFillProject />,
-  //   to: ROUTES.myProjects,
-  // },
-  // {
-  //   title: "Mis Tokens",
-  //   icon: <AiFillAccountBook />,
-  //   to: ROUTES.tokens,
-  // },
+  {
+    title: "Mis favoritos",
+    icon: <AiFillHeart />,
+    to: ROUTES.favorites,
+  },
+  {
+    title: "Mis Proyectos",
+    icon: <AiFillProject />,
+    to: ROUTES.myProjects,
+  },
+  {
+    title: "Mis Tokens",
+    icon: <AiFillAccountBook />,
+    to: ROUTES.tokens,
+  },
   {
     type: "divider",
   },
@@ -49,11 +49,11 @@ const navigation = [
     icon: <AiOutlineUser />,
     to: ROUTES.profile,
   },
-  // {
-  //   title: "Transacciones",
-  //   icon: <AiOutlineTransaction />,
-  //   to: ROUTES.transactions,
-  // },
+  {
+    title: "Transacciones",
+    icon: <AiOutlineTransaction />,
+    to: ROUTES.transactions,
+  },
   {
     type: "divider",
   },
@@ -70,10 +70,10 @@ function createMenuItem({ title, icon, children, type, to }) {
     icon,
     children,
     label: to ? (
-      // <Link href={to} passHref>
-      <a href={to}>{title}</a>
+      <Link href={to} passHref>
+        {title}
+      </Link>
     ) : (
-      // </Link>
       title
     ),
     type,

@@ -55,7 +55,7 @@ const NewProject = () => {
         "Por favor, diligencie su información de contacto para poder crear un proyecto.",
       onOk: () => router.replace(ROUTES.profile),
     });
-    return <></>;
+    return <>Aún no ha diligenciado su información de contacto</>;
   }
 
   const handlers = {

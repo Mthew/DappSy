@@ -1,11 +1,11 @@
 export const ROUTES = {
   home: "/",
   newProject: "/project",
-  favorites: "/favorites",
-  myProjects: "/project/my",
-  tokens: "/tokens",
+  favorites: "/profile/favorites",
+  myProjects: "/profile/projects",
+  tokens: "/profile/tokens",
   profile: "/profile",
-  transactions: "/transacctions",
+  transactions: "/transactions",
   logout: "/auth/signout",
   login: "/auth/signin",
 };

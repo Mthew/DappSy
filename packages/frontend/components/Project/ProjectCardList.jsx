@@ -1,7 +1,7 @@
 import { Col } from "antd";
 
 import { ProjectCard } from "./";
-import { Title, Row } from "../ui";
+import { Title, Row, Empty } from "../ui";
 
 const ProjectCardList = ({
   projects,
@@ -9,19 +9,25 @@ const ProjectCardList = ({
   loadData = false,
   brakePoints,
 }) => {
-  console.log("projects ======>", projects)
-  if ((projects || { length: 0 }).length === 0) return <></>;
+  console.log("projects ======>", projects);
+  if ((projects || { length: 0 }).length === 0)
+    return <Empty title={`No tiene ${title}`} />;
 
-  console.log("projectsss ======>", projects)
+  console.log("projectsss ======>", projects);
   return (
     <Row>
       {title && (
         <Col span={24}>
-          <Title level={3} className="my-20">{title}</Title>
+          <Title level={3} className="my-20">
+            {title}
+          </Title>
         </Col>
       )}
       {projects.map((id, i) => (
-        <Col key={i} {...(brakePoints || { xs: 24, sm: 12, md: 8, lg: 6, xl: 4 })}>
+        <Col
+          key={i}
+          {...(brakePoints || { xs: 24, sm: 12, md: 8, lg: 6, xl: 4 })}
+        >
           <ProjectCard data={{ id }} loadData={loadData} />
         </Col>
       ))}
@@ -30,5 +36,3 @@ const ProjectCardList = ({
 };
 
 export default ProjectCardList;
-
-

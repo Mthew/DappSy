@@ -52,9 +52,7 @@ const ProjectOwners = ({}) => {
                   key={`link-${i}`}
                   href={`${ROUTES.profile}/${owner.userId}`}
                 >
-                  <a>
-                    <FaEye />
-                  </a>
+                  <FaEye />
                 </NextLink>,
               ]}
             >
