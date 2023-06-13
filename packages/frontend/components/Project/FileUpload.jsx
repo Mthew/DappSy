@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { Modal, Upload } from "antd";
-// import { storage } from "../../ ";
-// import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { storage } from "../../utils/firestore";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -11,9 +11,24 @@ const getBase64 = (file) =>
     reader.onload = () => resolve(reader.result);
     reader.onerror = (error) => reject(error);
   });
+
+const UploadButton = (
+  <div>
+    <PlusOutlined />
+    <div
+      style={{
+        marginTop: 8,
+      }}
+    >
+      Upload
+    </div>
+  </div>
+);
 const App = ({ onChange }) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
+  const [progresspercent, setProgresspercent] = useState(0);
+  const [imgUrl, setImgUrl] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState([
     // {
@@ -48,49 +63,73 @@ const App = ({ onChange }) => {
     //   url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvlzc570MQUREVyblmqLF5PToffCvhZA4y9V4qdM2c_5AcIKoUeHH1gW3KWig9JI1dmXs&usqp=CAU',
     // },
   ]);
-  const handleCancel = () => setPreviewOpen(false);
-  const handlePreview = async (file) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
-    }
-    setPreviewImage(file.url || file.preview);
-    setPreviewOpen(true);
-    setPreviewTitle(
-      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
-    );
+
+  const handlers = {
+    cancel: () => setPreviewOpen(false),
+    preview: async (file) => {
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj);
+      }
+      setPreviewImage(file.url || file.preview);
+      setPreviewOpen(true);
+      setPreviewTitle(
+        file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+      );
+    },
+    change: ({ fileList: newFileList }) => {
+      setFileList(newFileList);
+      onChange(newFileList);
+      console.log("FILE-LIST =====> ", fileList);
+    },
+    submit: (e) => {
+      console.log("FILE-LIST =====> ", e);
+      handlers.change({ fileList: e.fileList });
+
+      const file = e.file;
+      if (!file) return;
+      const storageRef = ref(storage, `projects/${file.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          setProgresspercent(progress);
+        },
+        (error) => {
+          alert(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setImgUrl(downloadURL);
+          });
+        }
+      );
+    },
   };
-  const handleChange = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
-    onChange(newFileList);
-  };
-  const uploadButton = (
-    <div>
-      <PlusOutlined />
-      <div
-        style={{
-          marginTop: 8,
-        }}
-      >
-        Upload
-      </div>
-    </div>
-  );
+
   return (
     <>
       <Upload
-        action="/api/helpers/file"
+        // action="/api/helpers/file"
         listType="picture-card"
         fileList={fileList}
-        onPreview={handlePreview}
-        onChange={handleChange}
+        onPreview={handlers.preview}
+        onChange={handlers.submit}
       >
-        {fileList.length >= 8 ? null : uploadButton}
+        {fileList.length >= 8 ? null : UploadButton}
       </Upload>
+      {JSON.stringify({
+        percent: progresspercent,
+        imgUrl,
+      })}
       <Modal
         open={previewOpen}
         title={previewTitle}
         footer={null}
-        onCancel={handleCancel}
+        onCancel={handlers.cancel}
       >
         <img
           alt="example"
