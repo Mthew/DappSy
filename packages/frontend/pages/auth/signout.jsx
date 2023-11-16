@@ -3,9 +3,10 @@ import { AuthContext } from "../../context";
 
 function Signout() {
   const { logout } = useContext(AuthContext);
+
   useEffect(() => {
     logout();
-  }, [logout]);
+  }, [, logout]);
 
   return (
     <div className="content-center">

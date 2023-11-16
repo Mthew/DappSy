@@ -25,31 +25,11 @@ const data = [
       Date: "2010-04",
       scales: 1818,
     },
-    {
-      Date: "2010-05",
-      scales: 1920,
-    },
-    {
-      Date: "2010-06",
-      scales: 1802,
-    },
-    {
-      Date: "2010-07",
-      scales: 1945,
-    },
-    {
-      Date: "2010-08",
-      scales: 1856,
-    },
-    {
-      Date: "2010-09",
-      scales: 2107,
-    },
   ];
 
 export const SalehistoryChart = () => (
   <LineChart
-    width={600}
+    width={500}
     height={300}
     data={data}
     margin={{ top: 5, right: 20, bottom: 5, left: 0 }}

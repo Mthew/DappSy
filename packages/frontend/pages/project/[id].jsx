@@ -18,8 +18,6 @@ import { Layout } from "../../components/Layout";
 import { Row, Card, Title, Button } from "../../components/ui";
 import { SalehistoryChart } from "../../components/Project";
 
-
-
 const Text = Typography.Text;
 
 const dataSource = [
@@ -138,78 +136,77 @@ const ProjectGallery = ({ imgs }) => {
 const Project = ({ project }) => {
   return (
     <Layout title={project.name}>
-      <div className="mx-auto max-w-2xl py-16 px-4 md:px-1 sm:py-5 sm:px-6 lg:max-w-7xl lg:px-8">
-        <Row>
-          <Col span={12}>
-            <Space direction="vertical" size={16}>
-              {/* <Title color="white">{project.name}</Title> */}
-              <Card
-                className="rounded"
-                hoverable
-                extra={
-                  <Space direction="horizontal">
-                    <Text>43</Text>
-                    <AiFillHeart />
-                  </Space>
-                }
-                cover={<ProjectGallery imgs={project.imgs} />}
-              />
-              <Card title="Descripción del Proyecto" hoverable>
-                <Text>{project.description}</Text>
-              </Card>
-              <Card title="Detalles" hoverable>
-                <Descriptions column={2}>
-                  <Descriptions.Item label="País">
-                    {project.country}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Ciudad">
-                    {project.city}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Ubicación">
-                    {project.location}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Costo del Token">
-                    ${Number(project.cost) / Number(project.tokenCount)}
-                  </Descriptions.Item>
-                </Descriptions>
-              </Card>
-              <Card hoverable>
-                <Space>
-                  <Input suffix={<FaPlus />} prefix={<FaMinus />}></Input>
-                  <Button>Comprar tokens </Button>
+      <Row>
+        <Col span={12}>
+          <Space direction="vertical" size={16}>
+            {/* <Title color="white">{project.name}</Title> */}
+            <Card
+              className="rounded"
+              hoverable
+              extra={
+                <Space direction="horizontal">
+                  <Text>43</Text>
+                  <AiFillHeart />
                 </Space>
-              </Card>
-            </Space>
-          </Col>
-          <Col span={12}>
-            <Space direction="vertical" size={16}>
-              <Card>
-                <Button icon={<MdGroup size={20} />} type="text">
-                  10 Propietarios
-                </Button>
-                <Button icon={<BsFillGrid1X2Fill size={20} />} type="text">
-                  10 Total
-                </Button>
-                <Button icon={<BsEyeFill size={20} />} type="text">
-                  5.0k vizualizaciones
-                </Button>
-                <Button icon={<AiFillHeart size={20} />} type="text">
-                  50 Favoritos
-                </Button>
-              </Card>
-              <Card title={"Historial de ofertas"} hoverable>
-                <TransactionList />
-              </Card>
-              <Card>
-                <SalehistoryChart />
-              </Card>
-            </Space>
-          </Col>
-        </Row>
-        <Row>
-          
-        </Row>
-      </div>
+              }
+            >
+              <ProjectGallery imgs={project.imgs} />
+            </Card>
+            <Card title="Descripción del Proyecto" hoverable>
+              <Text>{project.description}</Text>
+            </Card>
+            <Card title="Detalles" hoverable>
+              <Descriptions column={2}>
+                <Descriptions.Item label="País">
+                  {project.country}
+                </Descriptions.Item>
+                <Descriptions.Item label="Ciudad">
+                  {project.city}
+                </Descriptions.Item>
+                <Descriptions.Item label="Ubicación">
+                  {project.location}
+                </Descriptions.Item>
+                <Descriptions.Item label="Costo del Token">
+                  ${Number(project.cost) / Number(project.tokenCount)}
+                </Descriptions.Item>
+              </Descriptions>
+            </Card>
+            <Card hoverable>
+              <Space>
+                <Input suffix={<FaPlus />} prefix={<FaMinus />}></Input>
+                <Button>Comprar tokens </Button>
+              </Space>
+            </Card>
+          </Space>
+        </Col>
+        <Col span={12}>
+          <Space direction="vertical" size={16}>
+            <Card>
+              <Button icon={<AiFillHeart size={20} />} type="default">
+                {"   "}Agregar a favoritos
+              </Button>
+            </Card>
+            <Card>
+              <Button icon={<MdGroup size={20} />} type="text">
+                10 Propietarios
+              </Button>
+              <Button icon={<BsFillGrid1X2Fill size={20} />} type="text">
+                10 Tokens
+              </Button>
+              <Button icon={<BsEyeFill size={20} />} type="text">
+                5.0k vizualizaciones
+              </Button>              
+            </Card>
+            <Card title={"Historial de ofertas"} hoverable>
+              <TransactionList />
+            </Card>
+            <Card>
+              <SalehistoryChart />
+            </Card>
+          </Space>
+        </Col>
+      </Row>
+      <Row></Row>
     </Layout>
   );
 };

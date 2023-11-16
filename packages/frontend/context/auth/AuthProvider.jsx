@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
         message: JSON.stringify(message),
         signature,
         redirect: false,
-        callbackUrl: ""
+        callbackUrl: "",
       });
       return data;
     },
@@ -35,14 +35,14 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (signature, siweMessage) => {
     const data = await handlers.login(signature, siweMessage);
-    if(data.status === 200) {
-        router.push(ROUTES.home);
+    if (data.status === 200) {
+      router.push(ROUTES.home);
     }
   };
 
   const logout = () => {
     signOut({
-        redirect: false
+      redirect: false,
     });
     disconnect();
     dispatch({ type: "AUTH-LOGOUT-PROCCESS" });
