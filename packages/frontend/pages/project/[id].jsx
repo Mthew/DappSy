@@ -142,6 +142,12 @@ const Project = ({ project }) => {
 
 export const getStaticPaths = async (ctx) => {
   const allProjects = await ProjectModel.get();
+  if (!allProjects) {
+    return {
+      paths: [{ params: { id: "0" } }],
+      fallback: true,
+    };
+  }
   return {
     paths: allProjects.map(({ id }) => ({
       params: { id },

@@ -10,6 +10,7 @@ import {
   InputNumber,
   Select,
 } from "antd";
+import { useSession } from "next-auth/react";
 
 //Context
 import { ProjectContext, ProfileContext } from "../../context";
@@ -24,11 +25,13 @@ import {
   PROJECT_CATEGORIES,
   showError,
   showWarningAlert,
+  showInfo,
 } from "../../utils";
 
 const NewProject = () => {
   const { createProject } = useContext(ProjectContext);
   const { profile } = useContext(ProfileContext);
+  const { status } = useSession();
 
   const [files, setFiles] = useState([]);
   const [images, setImages] = useState([]);
@@ -40,6 +43,17 @@ const NewProject = () => {
   const router = useRouter();
 
   useEffect(() => {
+    if (status === "unauthenticated") {
+      showWarningAlert({
+        title: "Sin autorización",
+        message:
+          "Para poder crear un proyecto, primero debe de iniciar sesión con una wallet de metamask",
+        onOk: () => router.replace(ROUTES.login),
+      });
+    }
+  }, [status]);
+
+  useEffect(() => {
     if (projectCost && tokenCount) {
       const tokenCost = projectCost / tokenCount;
       const tokenPercentage = (tokenCost * 100) / projectCost;
@@ -48,15 +62,16 @@ const NewProject = () => {
     }
   }, [projectCost, tokenCount]);
 
-  if (profile?.confirmed == false) {
-    showWarningAlert({
-      title: "Información de contacto sin configurar",
-      message:
-        "Por favor, diligencie su información de contacto para poder crear un proyecto.",
-      onOk: () => router.replace(ROUTES.profile),
-    });
-    return <>Aún no ha diligenciado su información de contacto</>;
-  }
+  useEffect(() => {
+    if (profile?.confirmed == false) {
+      showWarningAlert({
+        title: "Información de contacto sin configurar",
+        message:
+          "Por favor, diligencie su información de contacto para poder crear un proyecto.",
+        onOk: () => router.replace(ROUTES.profile),
+      });
+    }
+  }, [profile]);
 
   const handlers = {
     async save(values) {

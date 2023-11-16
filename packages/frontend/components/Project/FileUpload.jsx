@@ -30,39 +30,7 @@ const App = ({ onChange }) => {
   const [progresspercent, setProgresspercent] = useState(0);
   const [imgUrl, setImgUrl] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
-  const [fileList, setFileList] = useState([
-    // {
-    //   uid: '-1',
-    //   name: 'image.png',
-    //   status: 'done',
-    //   url: 'https://sites.google.com/site/creacionweb0002/_/rsrc/1488966382529/escrituras/342px-Escritura_Constitucion_Sociedad_Aces_01.jpg',
-    // },
-    // {
-    //   uid: '-2',
-    //   name: 'image.png',
-    //   status: 'done',
-    //   url: 'https://assets-global.website-files.com/5c4ba48132b5c62df3e9c1b4/5d2cca67a0329a460df71a43_Escritura%20Publica%20de%20bienes%20ra%C3%ADces%20(2)-01.jpg',
-    // },
-    // {
-    //   uid: '-3',
-    //   name: 'image.png',
-    //   status: 'done',
-    //   url: 'http://blog.hallocasa.com/wp-content/uploads/2017/02/escritura-mexico.jpg',
-    // },
-    // {
-    //   uid: '-4',
-    //   name: 'image.png',
-    //   status: 'done',
-    //   url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlPLMZ2YmwMzpaloha5TokBOGTpzmpfe1YlTewP3JR60NR9xK60vuj0O7o_NGUaJCuoTw&usqp=CAU',
-    // },
-    // {
-    //   uid: '-xxx',
-    //   percent: 50,
-    //   name: 'image.png',
-    //   status: 'uploading',
-    //   url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvlzc570MQUREVyblmqLF5PToffCvhZA4y9V4qdM2c_5AcIKoUeHH1gW3KWig9JI1dmXs&usqp=CAU',
-    // },
-  ]);
+  const [fileList, setFileList] = useState([]);
 
   const handlers = {
     cancel: () => setPreviewOpen(false),
@@ -99,7 +67,7 @@ const App = ({ onChange }) => {
           setProgresspercent(progress);
         },
         (error) => {
-          alert(error);
+          console.error(error);
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
@@ -113,7 +81,6 @@ const App = ({ onChange }) => {
   return (
     <>
       <Upload
-        // action="/api/helpers/file"
         listType="picture-card"
         fileList={fileList}
         onPreview={handlers.preview}
@@ -121,10 +88,10 @@ const App = ({ onChange }) => {
       >
         {fileList.length >= 8 ? null : UploadButton}
       </Upload>
-      {JSON.stringify({
+      {/* {JSON.stringify({
         percent: progresspercent,
         imgUrl,
-      })}
+      })} */}
       <Modal
         open={previewOpen}
         title={previewTitle}
