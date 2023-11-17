@@ -1,17 +1,21 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import { Col, Row, Form, InputNumber } from "antd";
 import { FaDollarSign } from "react-icons/fa";
 
 //Components
 import { Button } from "../ui";
 
-import { useTranferTokens } from "../../context";
+import { ProfileContext, useTranferTokens } from "../../context";
 
 //Utils
 import { showError } from "../../utils";
 
-const ProjectBuyTopkensForm = ({ projectKey, tokenCost }) => {
-  const { mint, setTokensToSell } = useTranferTokens({ projectKey });
+const ProjectBuyTopkensForm = ({ projectId, projectKey, tokenCost }) => {
+  const { validateProfileConfirmed } = useContext(ProfileContext);
+
+  const { mint, setTokensToSell, setTokenCost } = useTranferTokens({
+    projectKey,
+  });
 
   const [form] = Form.useForm();
   const tokenCount = Form.useWatch("tokenCount", form);
@@ -23,14 +27,19 @@ const ProjectBuyTopkensForm = ({ projectKey, tokenCost }) => {
 
   const handlers = {
     async buyTokens(values) {
-      const { tokenCount } = values;
+      if (!validateProfileConfirmed()) {
+        return;
+      }
+
+      const { tokenCount, tokenCost } = values;
 
       if ([0, null, undefined].indexOf(tokenCount) >= 0) {
         return showError("Debe seleccionar la cantidad de tokens");
       }
 
       setTokensToSell(tokenCount);
-      await mint();
+      setTokenCost(tokenCost);
+      await mint(projectId);
     },
   };
 
@@ -38,7 +47,16 @@ const ProjectBuyTopkensForm = ({ projectKey, tokenCost }) => {
     <Form layout="vertical" form={form} onFinish={handlers.buyTokens}>
       <Row>
         <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-          <Form.Item label="Cantidad de tokens" name="tokenCount">
+          <Form.Item
+            label="Cantidad de tokens"
+            name="tokenCount"
+            rules={[
+              {
+                required: true,
+                message: "¡La Cantidad de tokens es requerida!",
+              },
+            ]}
+          >
             <InputNumber style={{ width: "100%" }} min={1} />
           </Form.Item>
         </Col>

@@ -33,62 +33,57 @@ const calculateTokenCost = (cost, quantity) => {
 
 export const useTranferTokens = ({ projectKey }) => {
   const [tokensToSell, setTokensToSell] = useState(0);
+  const [tokenCost, setTokenCost] = useState(0);
 
-  const { profile, setProfile } = useContext(ProfileContext);
-  const [state, dispatch] = useReducer(projectReducer, projectInitialState);
+  const { saveTansactionOnDatabase } = useProject();
   const { isConnected } = useAccount();
 
-  const { config, error, isError } = usePrepareContractWrite({
+  const { config } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
     contractInterface: DappsyContractABI.output.abi,
     functionName: "transfer",
+    overrides: {
+      gasLimit: 1000000,
+      value: parseEther(String(tokenCost)),
+    },
     args: [projectKey, tokensToSell],
     enabled: tokensToSell > 0,
     onError: (err) => console.log("ERROR al conectarse", err),
     onSuccess: (result) => console.log("SUCCESS", result),
   });
 
-  const { data, writeAsync } = useContractWrite(config);
+  const { writeAsync } = useContractWrite(config);
 
-  const mint = async () => {
+  const mint = async (projectId) => {
     if (!isConnected) {
       showError("Wallet sin conexion");
     }
     console.log("DATATATAA====>", projectKey, tokensToSell);
     writeAsync?.()
       .then(() => {
-        saveOndatabase();
+        saveTansactionOnDatabase(projectId);
       })
       .catch(() => {
         showError("Se genero un error al intentar comprar tokens");
       });
   };
 
-  const saveOndatabase = async () => {
-    const data = {
-      tokenCount: tokensToSell,
-      projectId: state?.currentProject?.id,
-      userId: profile.id,
-    };
-    const result = await axios.put(`/project`, data);
-    if (result.data) {
-      dispatch({ type: "PROJECTS-UPDATE", payload: result.data.project });
-      setProfile(result.data.user);
-      showSuccess("¡Tokens adquiridos con exito!");
-
-      //ACTUALIZAR LA LISTA DE OWNER EN LA PANTALLA DE PROJECT-PREVIEW
-      //PROBAR FUNCIONALIDAD
-      //ACTUALiZAR LA LISTA DE TOKENS EN LA PANTALLA DE PERFIL
-    }
-  };
-
   return {
     mint,
     setTokensToSell,
+    setTokenCost,
   };
 };
 
 export const ProjectContext = createContext({});
+
+export const useProject = () => {
+  const context = useContext(ProjectContext);
+  if (!context) {
+    throw new Error("useProject must be used within a ProjectProvider");
+  }
+  return context;
+};
 
 export const ProjectProvider = ({ children }) => {
   const [contractArgs, setContractArgs] = useState([]);
@@ -117,6 +112,9 @@ export const ProjectProvider = ({ children }) => {
 
   const { config, error, isError } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
+    overrides: {
+      gasLimit: 1000000,
+    },
     contractInterface: DappsyContractABI.output.abi,
     functionName: "createProject",
     args: contractArgs, // String(BigInt(debouncedFormData.initialMintAmount) * BigInt(10 ** 18)),
@@ -159,6 +157,7 @@ export const ProjectProvider = ({ children }) => {
     const projectKey = generateteProjectKey();
     setContractArgs([projectKey, data.tokenCount, tokenAmount]);
     console.log("PARAM=>", [projectKey, data.tokenCount, tokenAmount]);
+
     writeAsync?.()
       .then((inf) => {
         console.log("INFORMACION", inf);
@@ -189,6 +188,25 @@ export const ProjectProvider = ({ children }) => {
     }
   };
 
+  const saveTansactionOnDatabase = async (projectId, tokensToSell) => {
+    const data = {
+      tokenCount: tokensToSell,
+      projectId: projectId,
+      userId: profile.id,
+    };
+    console.log("DATA TO TRANFERED PROJECT =>", data);
+    const result = await axios.put(`/project`, data);
+    if (result.data) {
+      dispatch({ type: "PROJECTS-UPDATE", payload: result.data.project });
+      setProfile(result.data.user);
+      showSuccess("¡Tokens adquiridos con exito!");
+
+      //ACTUALIZAR LA LISTA DE OWNER EN LA PANTALLA DE PROJECT-PREVIEW
+      //PROBAR FUNCIONALIDAD
+      //ACTUALiZAR LA LISTA DE TOKENS EN LA PANTALLA DE PERFIL
+    }
+  };
+
   const getProjectById = (projectId) => {
     return state.projects.find((project) => project.id === projectId);
   };
@@ -212,6 +230,7 @@ export const ProjectProvider = ({ children }) => {
         contractData: data,
         contractisError: isError,
         contractError: error,
+        saveTansactionOnDatabase,
       }}
     >
       {children}

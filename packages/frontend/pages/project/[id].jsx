@@ -75,7 +75,8 @@ const Project = ({ project }) => {
                   {project.location}
                 </Descriptions.Item>
                 <Descriptions.Item label="Precio total" span={2}>
-                  {`$${project.cost}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                  {`${project.cost}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                  {" ETH"}
                 </Descriptions.Item>
                 <Descriptions.Item label="Cantidad">
                   {`${project.tokenCount}`.replace(
@@ -85,10 +86,8 @@ const Project = ({ project }) => {
                   Tokens
                 </Descriptions.Item>
                 <Descriptions.Item label="Costo del token">
-                  {`$${project.tokenCost}`.replace(
-                    /\B(?=(\d{3})+(?!\d))/g,
-                    ","
-                  )}
+                  {`${project.tokenCost}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                  {" ETH"}
                 </Descriptions.Item>
                 <Descriptions.Item label="Porcentaje de propiedad por token">
                   {showPercentage(project.tokenPercentage)}
@@ -99,6 +98,7 @@ const Project = ({ project }) => {
               <ProjectBuyTokensForm
                 tokenCost={project.tokenCost}
                 projectKey={project.projectKey}
+                projectId={project.id}
               />
             </Card>
           </Space>
@@ -139,12 +139,6 @@ const Project = ({ project }) => {
 
 export const getStaticPaths = async (ctx) => {
   const allProjects = await ProjectModel.get();
-  if (!allProjects) {
-    return {
-      paths: [{ params: { id: "0" } }],
-      fallback: true,
-    };
-  }
   return {
     paths: allProjects.map(({ id }) => ({
       params: { id },
