@@ -31,6 +31,8 @@ function ProjectCard({ data, loadData }) {
     creationDate,
   } = data;
 
+  //https://firebasestorage.googleapis.com/v0/b/dappsy-7f76b.appspot.com/o/projects%2F001-MSPH4044-1024x576.jpeg?alt=media&token=d763a40a-f4bf-4401-a48c-89b79471ebcb
+
   return (
     <NextLink href={`/project/${id}`}>
       <div className="bg-white rounded-lg Open Sans cursor-pointer hover:shadow-lg">

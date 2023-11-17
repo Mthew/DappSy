@@ -36,12 +36,13 @@ async function createData(req, res) {
         date: getDate(),
       },
     ];
-    console.log("body", body);
     const entry = await ProjectModel.create(body);
 
     const user = await UserModel.getById(body.owner.userId);
-    await UserModel.update(user.id, {...user, projects: [...(user.projects || []), entry.id]});
-
+    await UserModel.update(user.id, {
+      ...user,
+      projects: [...(user.projects || []), entry.id],
+    });
     res.status(201).json(entry);
   } catch (e) {
     console.log("ERROR", e);

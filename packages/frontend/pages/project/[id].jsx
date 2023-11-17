@@ -1,9 +1,6 @@
 import React, { useEffect, useContext } from "react";
-import { Col, Space, Typography, Descriptions, Table } from "antd";
+import { Col, Space, Typography, Descriptions } from "antd";
 import { AiFillHeart } from "react-icons/ai";
-import { FaEthereum, FaMinus, FaMoneyBillWave, FaPlus } from "react-icons/fa";
-import { MdSell } from "react-icons/md";
-import { BsFillGrid1X2Fill } from "react-icons/bs";
 
 //Context
 import { ProjectContext, ProfileContext } from "../../context";
@@ -101,7 +98,7 @@ const Project = ({ project }) => {
             <Card hoverable>
               <ProjectBuyTokensForm
                 tokenCost={project.tokenCost}
-                projectId={project.id}
+                projectKey={project.projectKey}
               />
             </Card>
           </Space>

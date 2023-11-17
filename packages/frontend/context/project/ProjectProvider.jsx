@@ -1,19 +1,139 @@
-import { createContext, useReducer, useEffect, useContext } from "react";
+import {
+  createContext,
+  useReducer,
+  useEffect,
+  useContext,
+  useState,
+} from "react";
+import {
+  useContractWrite,
+  useAccount,
+  usePrepareContractWrite,
+  useContractEvent,
+} from "wagmi";
 
-import { axios } from "../../utils";
+import { axios, nextNumber, showError } from "../../utils";
 import { projectReducer, projectInitialState } from "./ProjectReducer";
 import { ProfileContext } from "../";
 
-import { showSuccess, getDate } from "../../utils";
+import DappsyContractABI from "../../contracts/Dappsy";
 
-import { useMessageSigner } from "../../hooks";
+import { showSuccess, getDate } from "../../utils";
+import { parseEther } from "@ethersproject/units";
+
+const CONTRACT_ADDRESS = "0x5F625fF2e423024c52614c54Dbc78dd80cDf88aA";
+
+const generateteProjectKey = nextNumber();
+
+const calculateTokenCost = (cost, quantity) => {
+  if (quantity == 0) throw new Error("Erorr division por 0");
+
+  return parseEther(String(cost / quantity));
+};
+
+export const useTranferTokens = ({ projectKey }) => {
+  const [tokensToSell, setTokensToSell] = useState(0);
+
+  const { profile, setProfile } = useContext(ProfileContext);
+  const [state, dispatch] = useReducer(projectReducer, projectInitialState);
+  const { isConnected } = useAccount();
+
+  const { config, error, isError } = usePrepareContractWrite({
+    addressOrName: CONTRACT_ADDRESS,
+    contractInterface: DappsyContractABI.output.abi,
+    functionName: "transfer",
+    args: [projectKey, tokensToSell],
+    enabled: tokensToSell > 0,
+    onError: (err) => console.log("ERROR al conectarse", err),
+    onSuccess: (result) => console.log("SUCCESS", result),
+  });
+
+  const { data, writeAsync } = useContractWrite(config);
+
+  const mint = async () => {
+    if (!isConnected) {
+      showError("Wallet sin conexion");
+    }
+    console.log("DATATATAA====>", projectKey, tokensToSell);
+    writeAsync?.()
+      .then(() => {
+        saveOndatabase();
+      })
+      .catch(() => {
+        showError("Se genero un error al intentar comprar tokens");
+      });
+  };
+
+  const saveOndatabase = async () => {
+    const data = {
+      tokenCount: tokensToSell,
+      projectId: state?.currentProject?.id,
+      userId: profile.id,
+    };
+    const result = await axios.put(`/project`, data);
+    if (result.data) {
+      dispatch({ type: "PROJECTS-UPDATE", payload: result.data.project });
+      setProfile(result.data.user);
+      showSuccess("¡Tokens adquiridos con exito!");
+
+      //ACTUALIZAR LA LISTA DE OWNER EN LA PANTALLA DE PROJECT-PREVIEW
+      //PROBAR FUNCIONALIDAD
+      //ACTUALiZAR LA LISTA DE TOKENS EN LA PANTALLA DE PERFIL
+    }
+  };
+
+  return {
+    mint,
+    setTokensToSell,
+  };
+};
 
 export const ProjectContext = createContext({});
 
 export const ProjectProvider = ({ children }) => {
+  const [contractArgs, setContractArgs] = useState([]);
+
   const [state, dispatch] = useReducer(projectReducer, projectInitialState);
   const { profile, setProfile } = useContext(ProfileContext);
-  const { showSignerMessage } = useMessageSigner();
+  const { isConnected } = useAccount();
+
+  useContractEvent({
+    addressOrName: CONTRACT_ADDRESS,
+    contractInterface: DappsyContractABI.output.abi,
+    eventName: "Add",
+    listener(log) {
+      console.log("ADDD=>", log);
+    },
+  });
+
+  useContractEvent({
+    addressOrName: CONTRACT_ADDRESS,
+    contractInterface: DappsyContractABI.output.abi,
+    eventName: "Transfer",
+    listener(log) {
+      console.log("TRANSFER=>", log);
+    },
+  });
+
+  const { config, error, isError } = usePrepareContractWrite({
+    addressOrName: CONTRACT_ADDRESS,
+    contractInterface: DappsyContractABI.output.abi,
+    functionName: "createProject",
+    args: contractArgs, // String(BigInt(debouncedFormData.initialMintAmount) * BigInt(10 ** 18)),
+    onError: (err) => console.log("ERROR al conectarse", err),
+    onSuccess: (result) => console.log("SUCCESS", result),
+    onSettled: (result) => console.log("SETTLED", result),
+  });
+
+  const { data, writeAsync, isLoading, isSuccess } = useContractWrite(config);
+
+  useEffect(() => {
+    console.log(
+      "ENTRO PPOR AQUI NO DEJO RASTROS NI ROSTROS",
+      isLoading,
+      isSuccess
+    );
+  }, [isSuccess]);
 
   useEffect(() => {
     try {
@@ -31,6 +151,28 @@ export const ProjectProvider = ({ children }) => {
   };
 
   const createProject = async (data, callback) => {
+    if (!isConnected) {
+      showError("Wallet sin conexion");
+    }
+
+    const tokenAmount = calculateTokenCost(data.cost, data.tokenCount);
+    const projectKey = generateteProjectKey();
+    setContractArgs([projectKey, data.tokenCount, tokenAmount]);
+    console.log("PARAM=>", [projectKey, data.tokenCount, tokenAmount]);
+    writeAsync?.()
+      .then((inf) => {
+        console.log("INFORMACION", inf);
+        createOnDatabase({ ...data, projectKey }, callback);
+      })
+      .catch(() =>
+        showError(
+          "Se genero un error al crear el contrato, por favor vuelva hacer clic sobre le boton guardar"
+        )
+      );
+  };
+
+  const createOnDatabase = async (data, callback) => {
+    console.log("DATA", data);
     data.creationDate = getDate();
     data.owner = {
       userId: profile.id,
@@ -38,17 +180,13 @@ export const ProjectProvider = ({ children }) => {
       profilePhoto: profile.img,
     };
 
-    showSignerMessage(
-      `Al guardar, esta creando un contrato inteligente que representa un proyecto inmobiliario. ¿Esta seguro de realizar esta acción?`,
-      async () => {
-        const result = await axios.post(`/project`, data);
+    const result = await axios.post(`/project`, data);
 
-        if (result.data) {
-          dispatch({ type: "PROJECTS-ADD", payload: result.data });
-          callback && callback();
-        }
-      }
-    );
+    if (result.data) {
+      dispatch({ type: "PROJECTS-ADD", payload: result.data });
+
+      callback && callback();
+    }
   };
 
   const getProjectById = (projectId) => {
@@ -57,24 +195,6 @@ export const ProjectProvider = ({ children }) => {
 
   const setCurrentProject = (project) => {
     dispatch({ type: "PROJECTS-SET-CURRENT", payload: project });
-  };
-
-  const mint = async (projectId, tokenCount) => {
-    const data = {
-      tokenCount,
-      projectId,
-      userId: profile.id,
-    };
-    const result = await axios.put(`/project`, data);
-    if (result.data) {
-      dispatch({ type: "PROJECTS-UPDATE", payload: result.data.project });
-      setProfile(result.data.user);
-      showSuccess("¡Tokens adquiridos con exito!");
-
-      //ACTUALIZAR LA LISTA DE OWNER EN LA PANTALLA DE PROJECT-PREVIEW
-      //PROBAR FUNCIONALIDAD
-      //ACTUALOZAR LA LISTA DE TOKENS EN LA PANTALLA DE PERFIL
-    }
   };
 
   return (
@@ -86,8 +206,12 @@ export const ProjectProvider = ({ children }) => {
         getProjects,
         createProject,
         getProjectById,
-        mint,
         setCurrentProject,
+        contractIsLoading: isLoading,
+        contractIsSuccess: isSuccess,
+        contractData: data,
+        contractisError: isError,
+        contractError: error,
       }}
     >
       {children}

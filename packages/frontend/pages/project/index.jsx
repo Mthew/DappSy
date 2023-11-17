@@ -29,7 +29,14 @@ import {
 } from "../../utils";
 
 const NewProject = () => {
-  const { createProject } = useContext(ProjectContext);
+  const {
+    createProject,
+    contractIsLoading,
+    contractIsSuccess,
+    contractData,
+    contractisError,
+    contractError,
+  } = useContext(ProjectContext);
   const { profile } = useContext(ProfileContext);
   const { status } = useSession();
 
@@ -80,8 +87,8 @@ const NewProject = () => {
       if (files.length == 0)
         return showError("Debe agregar al menos un archivo");
 
-      values.imgs = images.map((img) => img.response.data);
-      values.documents = files.map((file) => file.response.data);
+      values.imgs = images.map((img) => img.name);
+      values.documents = files.map((file) => file.name);
 
       createProject(values, () => router.replace(ROUTES.home));
     },
@@ -175,9 +182,10 @@ const NewProject = () => {
                     <Form.Item label="Costo del proyecto" name="cost" id="cost">
                       <InputNumber
                         min={0}
+                        prefix={"ETH"}
                         style={{ width: "100%" }}
                         formatter={(value) =>
-                          `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                          ` ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                         }
                         parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
                       />
@@ -201,8 +209,9 @@ const NewProject = () => {
                       <InputNumber
                         min={0}
                         style={{ width: "100%" }}
+                        prefix={"ETH"}
                         formatter={(value) =>
-                          `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                          ` ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                         }
                         parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
                         disabled
@@ -240,6 +249,10 @@ const NewProject = () => {
                       Guardar
                     </Button>
                     <Button>Cancelar</Button>
+                    {contractIsLoading && <div>Check Wallet</div>}
+                    {contractIsSuccess && (
+                      <div>Transaction: {JSON.stringify(contractData)}</div>
+                    )}
                   </Col>
                 </Row>
               </Card>
