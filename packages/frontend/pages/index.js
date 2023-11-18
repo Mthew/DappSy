@@ -85,7 +85,7 @@ const Home = ({}) => {
                     No hay proyectos disponibles
                   </h2>
                   <h4 className="mb-6 text-xl font-semibold">
-                    Si desea crear uno haga clic sobre el botón crear proyecto
+                    Si desea crear uno, haga clic sobre el botón crear proyecto
                   </h4>
 
                   <Link

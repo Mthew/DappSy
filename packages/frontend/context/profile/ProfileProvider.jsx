@@ -1,6 +1,7 @@
 import { createContext, useReducer, useEffect, useContext } from "react";
+import { useRouter } from "next/router";
 
-import { axios } from "../../utils";
+import { ROUTES, axios, showWarningAlert } from "../../utils";
 import { profileReducer, profileInitialState } from "./ProfileReducer";
 
 import { AuthContext } from "../auth";
@@ -9,6 +10,7 @@ export const ProfileContext = createContext({});
 
 export const ProfileProvider = ({ children }) => {
   const { user } = useContext(AuthContext);
+  const router = useRouter();
 
   const [state, dispatch] = useReducer(profileReducer, profileInitialState);
 
@@ -60,6 +62,18 @@ export const ProfileProvider = ({ children }) => {
     return state.profile?.favorites?.includes(projectId);
   };
 
+  const validateProfileConfirmed = () => {
+    if (state.profile?.confirmed == false) {
+      showWarningAlert({
+        title: "Información de contacto sin configurar",
+        message:
+          "Por favor, diligencie su información de contacto para poder continuar.",
+        onOk: () => router.replace(ROUTES.profile),
+      });
+    }
+    return state.profile?.confirmed;
+  };
+
   return (
     <ProfileContext.Provider
       value={{
@@ -71,7 +85,8 @@ export const ProfileProvider = ({ children }) => {
         saveProfileData,
         addToFavorites,
         isFavorite,
-        setProfile
+        setProfile,
+        validateProfileConfirmed,
       }}
     >
       {children}

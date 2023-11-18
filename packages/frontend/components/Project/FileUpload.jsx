@@ -47,7 +47,7 @@ const App = ({ onChange }) => {
     change: ({ fileList: newFileList }) => {
       setFileList(newFileList);
       onChange(newFileList);
-      console.log("FILE-LIST =====> ", fileList);
+      console.log("FILE-ITEM ====---=> ", newFileList, imgUrl);
     },
     submit: (e) => {
       console.log("FILE-LIST =====> ", e);
@@ -55,7 +55,7 @@ const App = ({ onChange }) => {
 
       const file = e.file;
       if (!file) return;
-      const storageRef = ref(storage, `projects/${file.name}`);
+      const storageRef = ref(storage, `files/${file.name}`);
       const uploadTask = uploadBytesResumable(storageRef, file);
 
       uploadTask.on(

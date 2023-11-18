@@ -10,7 +10,7 @@ export const CustomFooter = () => {
     >
       Tecnologico de Antioquia ©2023 Created by M_THEW
       <br />
-      v1.0.8
+      v1.0.10
     </Footer>
   );
 };

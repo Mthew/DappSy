@@ -29,8 +29,16 @@ import {
 } from "../../utils";
 
 const NewProject = () => {
-  const { createProject } = useContext(ProjectContext);
-  const { profile } = useContext(ProfileContext);
+  const {
+    createProject,
+    contractIsLoading,
+    contractIsSuccess,
+    contractData,
+    contractisError,
+    contractError,
+    writeAsync,
+  } = useContext(ProjectContext);
+  const { profile, validateProfileConfirmed } = useContext(ProfileContext);
   const { status } = useSession();
 
   const [files, setFiles] = useState([]);
@@ -63,14 +71,7 @@ const NewProject = () => {
   }, [projectCost, tokenCount]);
 
   useEffect(() => {
-    if (profile?.confirmed == false) {
-      showWarningAlert({
-        title: "Información de contacto sin configurar",
-        message:
-          "Por favor, diligencie su información de contacto para poder crear un proyecto.",
-        onOk: () => router.replace(ROUTES.profile),
-      });
-    }
+    validateProfileConfirmed();
   }, [profile]);
 
   const handlers = {
@@ -80,8 +81,8 @@ const NewProject = () => {
       if (files.length == 0)
         return showError("Debe agregar al menos un archivo");
 
-      values.imgs = images.map((img) => img.response.data);
-      values.documents = files.map((file) => file.response.data);
+      values.imgs = images.map((img) => img.name);
+      values.documents = files.map((file) => file.name);
 
       createProject(values, () => router.replace(ROUTES.home));
     },
@@ -172,12 +173,23 @@ const NewProject = () => {
               <Card title={"INFORMACIÓN ECONOMICA"} bordered={false}>
                 <Row>
                   <Col span={12}>
-                    <Form.Item label="Costo del proyecto" name="cost" id="cost">
+                    <Form.Item
+                      label="Costo del proyecto"
+                      name="cost"
+                      id="cost"
+                      rules={[
+                        {
+                          required: true,
+                          message: "¡El Costo del proyecto es requerido!",
+                        },
+                      ]}
+                    >
                       <InputNumber
                         min={0}
+                        prefix={"ETH"}
                         style={{ width: "100%" }}
                         formatter={(value) =>
-                          `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                          ` ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                         }
                         parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
                       />
@@ -188,6 +200,12 @@ const NewProject = () => {
                       label="Cantidad de Tokens"
                       name="tokenCount"
                       id="tokenCount"
+                      rules={[
+                        {
+                          required: true,
+                          message: "¡La Cantidad de Tokens es requerida!",
+                        },
+                      ]}
                     >
                       <InputNumber min={1} style={{ width: "100%" }} />
                     </Form.Item>
@@ -201,8 +219,9 @@ const NewProject = () => {
                       <InputNumber
                         min={0}
                         style={{ width: "100%" }}
+                        prefix={"ETH"}
                         formatter={(value) =>
-                          `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                          ` ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                         }
                         parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
                         disabled
@@ -228,20 +247,23 @@ const NewProject = () => {
                   </Col>
                 </Row>
                 <Row justify={"end"}>
-                  <Col
-                    span={3}
-                    style={{ display: "flex", flexDirection: "column" }}
-                  >
+                  <Col span={10} className="flex gap-5 content-end">
                     <Button
                       type="primary"
                       htmlType="submit"
+                      disabled={contractIsLoading}
+                      loading={contractIsLoading}
                       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4"
                     >
-                      Guardar
+                      {contractIsLoading ? "Crear Proyecto" : "Calcular GAS"}
                     </Button>
                     <Button>Cancelar</Button>
                   </Col>
+                  {contractIsLoading && <div>Check Wallet</div>}
                 </Row>
+                {/* {contractIsSuccess && (
+                  <div>Transaction: {JSON.stringify(contractData)}</div>
+                )} */}
               </Card>
             </Form>
           </CardContainer>

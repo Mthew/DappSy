@@ -1,5 +1,10 @@
 import moment from "moment";
 
+export const nextNumber =
+  (next = 1) =>
+  () =>
+    next++;
+
 export const showPercentage = (value) =>
   `${parseFloat(value || 0).toFixed(3)}%`;
 

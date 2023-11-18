@@ -50,32 +50,24 @@ const App = ({ files, onChange }) => {
       onChange(newFileList);
       console.log("FILE-LIST =====> ", fileList);
     },
-    submit: (e) => {
+    submit: async (e) => {
       console.log("FILE-LIST =====> ", e);
       handlers.change({ fileList: e.fileList });
 
       const file = e.file;
       if (!file) return;
-      const storageRef = ref(storage, `projects/${file.name}`);
-      const uploadTask = uploadBytesResumable(storageRef, file);
 
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress = Math.round(
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-          );
-          setProgresspercent(progress);
-        },
-        (error) => {
-          console.error(error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setImgUrl(downloadURL);
-          });
+      const response = await fetch(
+        `/api/helpers/upload?filename=${file.name}`,
+        {
+          method: "POST",
+          body: file,
         }
       );
+
+      const newBlob = await response.json();
+
+      // setBlob(newBlob);
     },
   };
   return (

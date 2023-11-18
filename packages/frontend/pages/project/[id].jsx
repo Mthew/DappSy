@@ -1,9 +1,6 @@
 import React, { useEffect, useContext } from "react";
-import { Col, Space, Typography, Descriptions, Table } from "antd";
+import { Col, Space, Typography, Descriptions } from "antd";
 import { AiFillHeart } from "react-icons/ai";
-import { FaEthereum, FaMinus, FaMoneyBillWave, FaPlus } from "react-icons/fa";
-import { MdSell } from "react-icons/md";
-import { BsFillGrid1X2Fill } from "react-icons/bs";
 
 //Context
 import { ProjectContext, ProfileContext } from "../../context";
@@ -78,7 +75,8 @@ const Project = ({ project }) => {
                   {project.location}
                 </Descriptions.Item>
                 <Descriptions.Item label="Precio total" span={2}>
-                  {`$${project.cost}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                  {`${project.cost}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                  {" ETH"}
                 </Descriptions.Item>
                 <Descriptions.Item label="Cantidad">
                   {`${project.tokenCount}`.replace(
@@ -88,10 +86,8 @@ const Project = ({ project }) => {
                   Tokens
                 </Descriptions.Item>
                 <Descriptions.Item label="Costo del token">
-                  {`$${project.tokenCost}`.replace(
-                    /\B(?=(\d{3})+(?!\d))/g,
-                    ","
-                  )}
+                  {`${project.tokenCost}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                  {" ETH"}
                 </Descriptions.Item>
                 <Descriptions.Item label="Porcentaje de propiedad por token">
                   {showPercentage(project.tokenPercentage)}
@@ -101,6 +97,7 @@ const Project = ({ project }) => {
             <Card hoverable>
               <ProjectBuyTokensForm
                 tokenCost={project.tokenCost}
+                projectKey={project.projectKey}
                 projectId={project.id}
               />
             </Card>
@@ -142,12 +139,6 @@ const Project = ({ project }) => {
 
 export const getStaticPaths = async (ctx) => {
   const allProjects = await ProjectModel.get();
-  if (!allProjects) {
-    return {
-      paths: [{ params: { id: "0" } }],
-      fallback: true,
-    };
-  }
   return {
     paths: allProjects.map(({ id }) => ({
       params: { id },
