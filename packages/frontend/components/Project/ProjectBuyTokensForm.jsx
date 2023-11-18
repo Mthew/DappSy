@@ -21,8 +21,11 @@ const ProjectBuyTopkensForm = ({ projectId, projectKey, tokenCost }) => {
   const tokenCount = Form.useWatch("tokenCount", form);
 
   useEffect(() => {
-    if (tokenCount && tokenCost)
+    if (tokenCount && tokenCost) {
       form.setFieldsValue({ tokenCost: tokenCount * tokenCost });
+      setTokensToSell(tokenCount);
+      setTokenCost(tokenCount * tokenCost);
+    }
   }, [tokenCount, tokenCost]);
 
   const handlers = {
@@ -31,14 +34,12 @@ const ProjectBuyTopkensForm = ({ projectId, projectKey, tokenCost }) => {
         return;
       }
 
-      const { tokenCount, tokenCost } = values;
+      const { tokenCount } = values;
 
       if ([0, null, undefined].indexOf(tokenCount) >= 0) {
         return showError("Debe seleccionar la cantidad de tokens");
       }
 
-      setTokensToSell(tokenCount);
-      setTokenCost(tokenCost);
       await mint(projectId);
     },
   };

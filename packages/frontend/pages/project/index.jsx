@@ -36,6 +36,7 @@ const NewProject = () => {
     contractData,
     contractisError,
     contractError,
+    writeAsync,
   } = useContext(ProjectContext);
   const { profile, validateProfileConfirmed } = useContext(ProfileContext);
   const { status } = useSession();
@@ -80,7 +81,6 @@ const NewProject = () => {
       if (files.length == 0)
         return showError("Debe agregar al menos un archivo");
 
-      //almacenar en base 64
       values.imgs = images.map((img) => img.name);
       values.documents = files.map((file) => file.name);
 
@@ -251,6 +251,8 @@ const NewProject = () => {
                     <Button
                       type="primary"
                       htmlType="submit"
+                      disabled={contractIsLoading}
+                      loading={contractIsLoading}
                       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4"
                     >
                       {contractIsLoading ? "Crear Proyecto" : "Calcular GAS"}

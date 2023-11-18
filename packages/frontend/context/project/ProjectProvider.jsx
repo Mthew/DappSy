@@ -12,7 +12,7 @@ import {
   useContractEvent,
 } from "wagmi";
 
-import { axios, nextNumber, showError } from "../../utils";
+import { axios, nextNumber, showError, showInfo } from "../../utils";
 import { projectReducer, projectInitialState } from "./ProjectReducer";
 import { ProfileContext } from "../";
 
@@ -20,10 +20,18 @@ import DappsyContractABI from "../../contracts/Dappsy";
 
 import { showSuccess, getDate } from "../../utils";
 import { parseEther } from "@ethersproject/units";
+import { useDebounce } from "../../hooks";
 
-const CONTRACT_ADDRESS = "0x5F625fF2e423024c52614c54Dbc78dd80cDf88aA";
+// const CONTRACT_ADDRESS = "0x5F625fF2e423024c52614c54Dbc78dd80cDf88aA";
+// const CONTRACT_ADDRESS = "0x5A020F8522CBbF831949d40e6A029840c9201171";
+const CONTRACT_ADDRESS = "0xEf4071b3F3633Cd7066edB0404F1c3b88E043728";
 
-const generateteProjectKey = nextNumber();
+const TX_TYPE = {
+  success: 1,
+  fail: 0,
+};
+
+const generateteProjectKey = () => String(new Date().valueOf());
 
 const calculateTokenCost = (cost, quantity) => {
   if (quantity == 0) throw new Error("Erorr division por 0");
@@ -34,22 +42,41 @@ const calculateTokenCost = (cost, quantity) => {
 export const useTranferTokens = ({ projectKey }) => {
   const [tokensToSell, setTokensToSell] = useState(0);
   const [tokenCost, setTokenCost] = useState(0);
+  const debouncedTokensToSell = useDebounce(tokensToSell, 500);
 
   const { saveTansactionOnDatabase } = useProject();
   const { isConnected } = useAccount();
 
   const { config } = usePrepareContractWrite({
     addressOrName: CONTRACT_ADDRESS,
-    contractInterface: DappsyContractABI.output.abi,
+    contractInterface: [
+      {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "_projectKey",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "tokensToSell",
+            type: "uint256",
+          },
+        ],
+        name: "transfer",
+        outputs: [],
+        stateMutability: "payable",
+        type: "function",
+      },
+    ],
     functionName: "transfer",
     overrides: {
       gasLimit: 1000000,
-      value: parseEther(String(tokenCost)),
+      value: String(parseEther(String(tokenCost))),
     },
-    args: [projectKey, tokensToSell],
-    enabled: tokensToSell > 0,
+    args: [String(projectKey), String(debouncedTokensToSell)],
+    enabled: Boolean(debouncedTokensToSell),
     onError: (err) => console.log("ERROR al conectarse", err),
-    onSuccess: (result) => console.log("SUCCESS", result),
   });
 
   const { writeAsync } = useContractWrite(config);
@@ -60,8 +87,28 @@ export const useTranferTokens = ({ projectKey }) => {
     }
     console.log("DATATATAA====>", projectKey, tokensToSell);
     writeAsync?.()
-      .then(() => {
-        saveTansactionOnDatabase(projectId);
+      .then((tsx) => {
+        showInfo(
+          `transacción en proceso ${tsx.hash}; Pendiente de confirmación`
+        );
+
+        tsx.wait().then((tsxValue) => {
+          console.log("CONFIRMATION", tsxValue);
+
+          switch (tsxValue.status) {
+            case TX_TYPE.success: {
+              showSuccess(`Transacción confirmada; tokens adquiridos`);
+              saveTansactionOnDatabase(projectId, tokensToSell);
+              break;
+            }
+            case TX_TYPE.fail: {
+              showError(`Transaccion fallida`);
+              break;
+            }
+            default:
+              break;
+          }
+        });
       })
       .catch(() => {
         showError("Se genero un error al intentar comprar tokens");
@@ -87,6 +134,7 @@ export const useProject = () => {
 
 export const ProjectProvider = ({ children }) => {
   const [contractArgs, setContractArgs] = useState([]);
+  const debouncedContractArgs = useDebounce(contractArgs, 500);
 
   const [state, dispatch] = useReducer(projectReducer, projectInitialState);
   const { profile, setProfile } = useContext(ProfileContext);
@@ -94,19 +142,10 @@ export const ProjectProvider = ({ children }) => {
 
   useContractEvent({
     addressOrName: CONTRACT_ADDRESS,
-    contractInterface: DappsyContractABI.output.abi,
+    contractInterface: DappsyContractABI,
     eventName: "Add",
     listener(log) {
       console.log("ADDD=>", log);
-    },
-  });
-
-  useContractEvent({
-    addressOrName: CONTRACT_ADDRESS,
-    contractInterface: DappsyContractABI.output.abi,
-    eventName: "Transfer",
-    listener(log) {
-      console.log("TRANSFER=>", log);
     },
   });
 
@@ -115,23 +154,40 @@ export const ProjectProvider = ({ children }) => {
     overrides: {
       gasLimit: 1000000,
     },
-    contractInterface: DappsyContractABI.output.abi,
+    contractInterface: [
+      {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "projectKey",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "tokenCount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "tokenAmount",
+            type: "uint256",
+          },
+        ],
+        name: "createProject",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function",
+      },
+    ],
     functionName: "createProject",
-    args: contractArgs, // String(BigInt(debouncedFormData.initialMintAmount) * BigInt(10 ** 18)),
+    args: debouncedContractArgs, // String(BigInt(debouncedFormData.initialMintAmount) * BigInt(10 ** 18)),
+    enabled: Boolean(debouncedContractArgs),
     onError: (err) => console.log("ERROR al conectarse", err),
-    onSuccess: (result) => console.log("SUCCESS", result),
-    onSettled: (result) => console.log("SETTLED", result),
+    // onSuccess: (result) => console.log("SUCCESS", result),
+    // onSettled: (result) => console.log("SETTLED", result),
   });
 
   const { data, writeAsync, isLoading, isSuccess } = useContractWrite(config);
-
-  useEffect(() => {
-    console.log(
-      "ENTRO PPOR AQUI NO DEJO RASTROS NI ROSTROS",
-      isLoading,
-      isSuccess
-    );
-  }, [isSuccess]);
 
   useEffect(() => {
     try {
@@ -140,6 +196,8 @@ export const ProjectProvider = ({ children }) => {
       dispatch({ type: "PROJECTS-SET", payload: [] });
     }
   }, []);
+
+  useEffect(() => {}, [contractArgs]);
 
   const getProjects = async () => {
     const result = await axios.get(`/project`);
@@ -155,15 +213,44 @@ export const ProjectProvider = ({ children }) => {
 
     const tokenAmount = calculateTokenCost(data.cost, data.tokenCount);
     const projectKey = generateteProjectKey();
-    setContractArgs([projectKey, data.tokenCount, tokenAmount]);
-    console.log("PARAM=>", [projectKey, data.tokenCount, tokenAmount]);
+
+    const args = [
+      String(projectKey),
+      String(data.tokenCount),
+      String(tokenAmount),
+    ];
+    setContractArgs(() => args);
+    console.log("PARAMS=>", args);
 
     writeAsync?.()
-      .then((inf) => {
-        console.log("INFORMACION", inf);
-        createOnDatabase({ ...data, projectKey }, callback);
+      .then(async (txc) => {
+        showInfo(
+          `transacción en proceso ${txc.hash}; Pendiente de confirmación`
+        );
+
+        txc.wait().then((txcValue) => {
+          console.log("CONFIRMATION", txcValue);
+
+          switch (txcValue.status) {
+            case TX_TYPE.success: {
+              showSuccess(`Transacción confirmada`);
+              createOnDatabase(
+                { ...data, projectKey: contractArgs[0] },
+                callback
+              );
+              setContractArgs([]);
+              break;
+            }
+            case TX_TYPE.fail: {
+              showError(`Transaccion fallida`);
+              break;
+            }
+            default:
+              break;
+          }
+        });
       })
-      .catch(() =>
+      .catch((err) =>
         showError(
           "Se genero un error al crear el contrato, por favor vuelva hacer clic sobre le boton guardar"
         )
@@ -231,6 +318,7 @@ export const ProjectProvider = ({ children }) => {
         contractisError: isError,
         contractError: error,
         saveTansactionOnDatabase,
+        writeAsync,
       }}
     >
       {children}
