@@ -1,12 +1,10 @@
 import React, { useEffect, useContext } from "react";
+import { useParams } from "next/navigation";
 import { Col, Space, Typography, Descriptions } from "antd";
 import { AiFillHeart } from "react-icons/ai";
 
 //Context
 import { ProjectContext, ProfileContext } from "../../context";
-
-//Database
-import { ProjectModel } from "../../database";
 
 //Components
 import { Layout } from "../../components/Layout";
@@ -23,13 +21,17 @@ import { showPercentage, showSuccess } from "../../utils";
 
 const Text = Typography.Text;
 
-const Project = ({ project }) => {
+const project = {};
+
+const Project = () => {
+  const params = useParams();
   const { favorites = 50, setCurrentProject } = useContext(ProjectContext);
   const { isFavorite, addToFavorites } = useContext(ProfileContext);
 
   useEffect(() => {
+    console.log("parama", params);
     setCurrentProject(project);
-  }, []);
+  }, [params]);
 
   const handlers = {
     addFavorite() {
@@ -137,36 +139,36 @@ const Project = ({ project }) => {
   );
 };
 
-export const getStaticPaths = async (ctx) => {
-  const allProjects = await ProjectModel.get();
-  return {
-    paths: allProjects.map(({ id }) => ({
-      params: { id },
-    })),
-    fallback: false,
-  };
-};
+// export const getStaticPaths = async (ctx) => {
+//   const allProjects = await ProjectModel.get();
+//   return {
+//     paths: allProjects.map(({ id }) => ({
+//       params: { id },
+//     })),
+//     fallback: false,
+//   };
+// };
 
-export const getStaticProps = async ({ params }) => {
-  const { id } = params;
+// export const getStaticProps = async ({ params }) => {
+//   const { id } = params;
 
-  const project = await ProjectModel.getById(id);
+//   const project = await ProjectModel.getById(id);
 
-  if (!project) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
+//   if (!project) {
+//     return {
+//       redirect: {
+//         destination: "/",
+//         permanent: false,
+//       },
+//     };
+//   }
 
-  return {
-    props: {
-      project,
-    },
-    revalidate: 86400, // 60 * 60 * 24
-  };
-};
+//   return {
+//     props: {
+//       project,
+//     },
+//     revalidate: 86400, // 60 * 60 * 24
+//   };
+// };
 
 export default Project;

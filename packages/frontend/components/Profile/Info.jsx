@@ -10,7 +10,11 @@ import { Form } from "./";
 const Text = Typography.Text;
 
 const Info = ({}) => {
-  const { profile = {}, showForm, showProfileForm } = useContext(ProfileContext);
+  const {
+    profile = {},
+    showForm,
+    showProfileForm,
+  } = useContext(ProfileContext);
 
   const handlers = {
     edit() {

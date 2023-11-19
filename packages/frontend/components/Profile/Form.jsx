@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Form, Input, Button, Col, Modal } from "antd";
+import { Form, Input, Button, Col, Modal, Cascader } from "antd";
 
 import { ProfileContext } from "../../context";
 
@@ -132,12 +132,51 @@ const ProfileForm = ({}) => {
             </Col>
           </Row>
           <Row>
-            <Col span={8}>
-              <Form.Item label="País" name="country">
-                <Input />
+            <Col span={24}>
+              <Form.Item label="Ubicación" name="city">
+                <Cascader
+                  options={[
+                    {
+                      value: "Colombia",
+                      label: "Colombia",
+                      children: [
+                        {
+                          value: "Antioquia",
+                          label: "Antioquia",
+                          children: [
+                            {
+                              value: "Medellin",
+                              label: "Medellin",
+                            },
+                            {
+                              value: "Bello",
+                              label: "Bello",
+                            },
+                            {
+                              value: "Sabaneta",
+                              label: "Sabaneta",
+                            },
+                            {
+                              value: "Envigado",
+                              label: "Envigado",
+                            },
+                            {
+                              value: "Itagüi",
+                              label: "Itagüi",
+                            },
+                            {
+                              value: "La Estrella",
+                              label: "La Estrella",
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ]}
+                />
               </Form.Item>
             </Col>
-            <Col span={8}>
+            {/* <Col span={8}>
               <Form.Item label="Ciudad" name="city">
                 <Input />
               </Form.Item>
@@ -146,7 +185,7 @@ const ProfileForm = ({}) => {
               <Form.Item label="Postal" name="postalCode">
                 <Input />
               </Form.Item>
-            </Col>
+            </Col> */}
           </Row>
         </Card>
         <Card title={"ACERCA DE MI"} bordered={false}>
