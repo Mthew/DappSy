@@ -1,5 +1,7 @@
 import React, { useEffect, useContext } from "react";
+
 import { useParams } from "next/navigation";
+
 import { Col, Space, Typography, Descriptions } from "antd";
 import { AiFillHeart } from "react-icons/ai";
 
@@ -139,6 +141,7 @@ const Project = () => {
   );
 };
 
+
 // export const getStaticPaths = async (ctx) => {
 //   const allProjects = await ProjectModel.get();
 //   return {
@@ -148,6 +151,7 @@ const Project = () => {
 //     fallback: false,
 //   };
 // };
+
 
 // export const getStaticProps = async ({ params }) => {
 //   const { id } = params;

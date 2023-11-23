@@ -14,6 +14,7 @@ const App = ({ files, onChange }) => {
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState([]);
+
   const handleCancel = () => setPreviewOpen(false);
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
@@ -28,6 +29,7 @@ const App = ({ files, onChange }) => {
   const handleChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
     onChange(newFileList);
+
   };
 
   const uploadButton = (

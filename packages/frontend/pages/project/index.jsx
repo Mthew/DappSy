@@ -82,7 +82,9 @@ const NewProject = () => {
       if (files.length == 0)
         return showError("Debe agregar al menos un archivo");
 
+
       values.imgs = images.map((img) => img.response.data);
+
       values.documents = files.map((file) => file.name);
 
       createProject(values, () => router.replace(ROUTES.home));
