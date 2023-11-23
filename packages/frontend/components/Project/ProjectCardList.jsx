@@ -9,11 +9,9 @@ const ProjectCardList = ({
   loadData = false,
   brakePoints,
 }) => {
-  console.log("projects ======>", projects);
   if ((projects || { length: 0 }).length === 0)
     return <Empty title={`No tiene ${title}`} />;
 
-  console.log("projectsss ======>", projects);
   return (
     <Row>
       {title && (
