@@ -5,7 +5,6 @@ import "@openzeppelin/contracts@5.0.0/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts@5.0.0/access/Ownable.sol";
 
 contract Dappsy is ERC1155, Ownable {
-
     struct Project {
         uint256 tokenCost;
         address originalOwner;
@@ -39,7 +38,7 @@ contract Dappsy is ERC1155, Ownable {
         uint256 tokenAmount
     ) public {
         totalProjectsCounter++;
-        
+
         projects[projectKey] = Project({
             tokenCost: tokenAmount,
             originalOwner: msg.sender,
@@ -52,22 +51,24 @@ contract Dappsy is ERC1155, Ownable {
         emit Add(msg.sender, projectKey, totalProjectsCounter);
     }
 
-    function transfer(uint256 _projectKey, uint256 tokensToSell) public payable {
+    function transfer(uint256 _projectKey, uint256 tokensToSell)
+        public
+        payable
+    {
         Project memory project = projects[_projectKey];
-        uint256 transactionAmont = project.tokenCost * tokensToSell;
-
-         require(
+        
+        require(
             project.tokenCost > 0,
             "No hay suficientes tokens disponibles para realizar esta venta"
         );
 
         require(
-            project.tokenAvalibles - tokensToSell > 0,
+            project.tokenAvalibles - tokensToSell >= 0,
             "No hay suficientes tokens disponibles para realizar esta venta"
         );
 
         address payable seller = payable(project.originalOwner);
-        seller.transfer(transactionAmont);
+        seller.transfer(msg.value);
         _safeTransferFrom(
             project.originalOwner,
             msg.sender,
@@ -77,6 +78,11 @@ contract Dappsy is ERC1155, Ownable {
         );
 
         projects[_projectKey].tokenAvalibles -= tokensToSell;
-        emit Transfer(project.originalOwner, msg.sender, _projectKey, tokensToSell);
+        emit Transfer(
+            project.originalOwner,
+            msg.sender,
+            _projectKey,
+            tokensToSell
+        );
     }
 }
