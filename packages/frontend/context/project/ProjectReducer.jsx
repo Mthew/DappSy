@@ -31,7 +31,7 @@ export const projectReducer = (state, action) => {
     case "PROJECTS-SET-CURRENT":
       return {
         ...state,
-        currentProject: action.payload,
+        currentProject: state.projects.find((x) => x.id === action.payload),
       };
     default:
       return state;

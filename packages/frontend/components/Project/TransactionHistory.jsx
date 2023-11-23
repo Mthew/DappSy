@@ -35,13 +35,15 @@ const columns = [
         case TRANSACTION_TYPE.Creation:
           return (
             <div className="inline-flex items-center">
-              <GiNewBorn color="green" /> CREACIÓN
+              <GiNewBorn color="green" />
+              &nbsp;CREACIÓN
             </div>
           );
         default:
           return (
             <div className="inline-flex items-center">
-              <FcBullish color="green" /> VENTA
+              <FcBullish color="green" />
+              &nbsp;COMPRA
             </div>
           );
       }

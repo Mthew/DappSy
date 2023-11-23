@@ -14,7 +14,7 @@ import {
 
 import { axios, nextNumber, showError, showInfo } from "../../utils";
 import { projectReducer, projectInitialState } from "./ProjectReducer";
-import { ProfileContext } from "../";
+import { ProfileContext, useNotification } from "../";
 
 import DappsyContractABI from "../../contracts/Dappsy";
 
@@ -43,6 +43,7 @@ export const useTranferTokens = ({ projectKey }) => {
   const [tokensToSell, setTokensToSell] = useState(0);
   const [tokenCost, setTokenCost] = useState(0);
   const debouncedTokensToSell = useDebounce(tokensToSell, 500);
+  const { notifyError, notifyInfo, notifySuccess } = useNotification();
 
   const { saveTansactionOnDatabase } = useProject();
   const { isConnected } = useAccount();
@@ -88,21 +89,63 @@ export const useTranferTokens = ({ projectKey }) => {
     console.log("DATATATAA====>", projectKey, tokensToSell);
     writeAsync?.()
       .then((tsx) => {
-        showInfo(
-          `transacción en proceso ${tsx.hash}; Pendiente de confirmación`
-        );
+        // showInfo("TRANSACCION EN PROCESO");
+        notifyInfo({
+          title: "Transacción en proceso",
+          duration: 15,
+          message: (
+            <>
+              La transacción se encuentra siendo procesada en blockchain. <br />
+              Por favor espere unso segundos mientras está es confirmada
+              <br />
+              <div className="text-blue bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                <a
+                  href={`https://sepolia.etherscan.io/tx/${tsx.hash}`}
+                  target="_blank"
+                >
+                  Ver en Etherscan
+                </a>
+              </div>
+            </>
+          ),
+        });
 
         tsx.wait().then((tsxValue) => {
           console.log("CONFIRMATION", tsxValue);
 
           switch (tsxValue.status) {
             case TX_TYPE.success: {
-              showSuccess(`Transacción confirmada; tokens adquiridos`);
+              // showSuccess(`Transacción confirmada; tokens adquiridos`);
+              notifySuccess({
+                title: "¡Transaccion confirmada!",
+                duration: 30,
+                message: (
+                  <>
+                    Felicidades, ahora formas parte como propietario de este
+                    inmueble <br />
+                    Aqui podra ver el contrato inteligente que lo respresenta,
+                    como a tus socios propietarios:
+                    <br />
+                    <div className="text-blue bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                      <a
+                        href={`https://testnets.opensea.io/assets/sepolia/${CONTRACT_ADDRESS}/${projectKey}`}
+                        target="_blank"
+                      >
+                        Ver en Etherscan
+                      </a>
+                    </div>
+                  </>
+                ),
+              });
               saveTansactionOnDatabase(projectId, tokensToSell);
               break;
             }
             case TX_TYPE.fail: {
-              showError(`Transaccion fallida`);
+              showError("Transaccion fallida");
+              // notifyError({
+              //   title: `Transaccion fallida`,
+              //   message: "Error al procesar la transaccion en blockchain",
+              // });
               break;
             }
             default:
@@ -136,6 +179,7 @@ export const ProjectProvider = ({ children }) => {
   const [contractArgs, setContractArgs] = useState([]);
   const debouncedContractArgs = useDebounce(contractArgs, 500);
 
+  const { notifyError, notifyInfo, notifySuccess } = useNotification();
   const [state, dispatch] = useReducer(projectReducer, projectInitialState);
   const { profile, setProfile } = useContext(ProfileContext);
   const { isConnected } = useAccount();
@@ -224,16 +268,58 @@ export const ProjectProvider = ({ children }) => {
 
     writeAsync?.()
       .then(async (txc) => {
-        showInfo(
-          `transacción en proceso ${txc.hash}; Pendiente de confirmación`
-        );
+        //`https://sepolia.etherscan.io/tx/${txc.hash}`
+
+        notifyInfo({
+          title: "Transacción en proceso",
+          duration: 15,
+          message: (
+            <>
+              La transacción se encuentra siendo procesada en blockchain. <br />
+              Por favor espere unso segundos mientras está es confirmada
+              <br />
+              <div className="text-blue bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                <a
+                  href={`https://sepolia.etherscan.io/tx/${txc.hash}`}
+                  target="_blank"
+                >
+                  Ver en Etherscan
+                </a>
+              </div>
+            </>
+          ),
+        });
+        // showInfo(
+        //   `transacción en proceso ${txc.hash}; Pendiente de confirmación`
+        // );
 
         txc.wait().then((txcValue) => {
           console.log("CONFIRMATION", txcValue);
 
           switch (txcValue.status) {
             case TX_TYPE.success: {
-              showSuccess(`Transacción confirmada`);
+              notifySuccess({
+                title: "¡Transaccion confirmada!",
+                message: (
+                  <>
+                    Felicidades, ha creado un nuevo proyecto disponible para la
+                    venta. <br />
+                    Aqui podra ver el contrato inteligente desplegado que
+                    representa su proyecto inmobiliario:
+                    <br />
+                    <div className="text-blue bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                      <a
+                        href={`https://sepolia.etherscan.io/token/${CONTRACT_ADDRESS}?a=${contractArgs[0]}`}
+                        target="_blank"
+                      >
+                        Ver en Etherscan
+                      </a>
+                    </div>
+                  </>
+                ),
+              });
+
+              // showSuccess(`Transacción confirmada`);
               createOnDatabase(
                 { ...data, projectKey: contractArgs[0] },
                 callback
@@ -242,7 +328,11 @@ export const ProjectProvider = ({ children }) => {
               break;
             }
             case TX_TYPE.fail: {
-              showError(`Transaccion fallida`);
+              notifyError({
+                title: `Transaccion fallida`,
+                message: "Error al procesar la transaccion en blockchain",
+              });
+              // showError(`Transaccion fallida`);
               break;
             }
             default:
@@ -251,9 +341,11 @@ export const ProjectProvider = ({ children }) => {
         });
       })
       .catch((err) =>
-        showError(
-          "Se genero un error al crear el contrato, por favor vuelva hacer clic sobre le boton guardar"
-        )
+        notifyError({
+          title: `Transaccion fallida`,
+          message:
+            "Se genero un error al crear el contrato, por favor vuelva hacer clic sobre le boton guardar",
+        })
       );
   };
 
@@ -298,8 +390,8 @@ export const ProjectProvider = ({ children }) => {
     return state.projects.find((project) => project.id === projectId);
   };
 
-  const setCurrentProject = (project) => {
-    dispatch({ type: "PROJECTS-SET-CURRENT", payload: project });
+  const setCurrentProject = (projectId) => {
+    dispatch({ type: "PROJECTS-SET-CURRENT", payload: projectId });
   };
 
   return (

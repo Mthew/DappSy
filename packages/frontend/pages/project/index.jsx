@@ -79,12 +79,11 @@ const NewProject = () => {
     async save(values) {
       if (images.length == 0)
         return showError("Debe agregar al menos una imagen");
+
       if (files.length == 0)
         return showError("Debe agregar al menos un archivo");
-
-      values.imgs = images.map((img) => img.response.data);
-      values.documents = files.map((file) => file.name);
-
+      values.imgs = images.map((img) => img.cloudUrl);
+      values.documents = files.map((file) => file.response.data);
       createProject(values, () => router.replace(ROUTES.home));
     },
     addImage: (newImages) => setImages(newImages),
